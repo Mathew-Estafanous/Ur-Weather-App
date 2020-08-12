@@ -1,0 +1,9 @@
+/* Current Day View */
+.current-day-view {
+    border-radius: 20px;
+  }
+  
+.city-location, .current-date {
+padding: var(--lumo-space-s);
+margin: 0px;
+}

@@ -4,23 +4,26 @@
    https://vaadin.com/themes/lumo for more information.
 */
 
-/* Example: CSS class name to center align the content . */
-.centered-content {
-  margin: 0 auto;
-  max-width: 250px;
+/*Navigation Bar View*/
+.navigation-bar {
+  width: 100%;
+  margin-bottom: auto;
 }
 
-/*Navigation Bar View*/
 .searchField {
   margin-right: var(--lumo-space-s);
   padding: var(--lumo-space-s);
   padding: 0px 7px 0px;
+  background-color: #202241;
+  color: white;
 }
 
 .searchButton {
   margin-right: var(--lumo-space-s);
   padding: var(--lumo-space-s);
   padding: 0px 5px 0px;
+  background-color: #202241;
+  color: white;
 }
 
 .searchBlock {
@@ -28,7 +31,12 @@
   float: right;
 }
 
-/*Current Day View*/
-.current-info {
-  background-color: gray;
+/* Main Layout */
+.main-layout {
+  background-image: url("https://img.freepik.com/free-photo/beautiful-colorful-sunset_1048-2416.jpg?size=626&ext=jpg");
+  height: 100%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
