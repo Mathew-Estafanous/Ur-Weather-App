@@ -10,3 +10,25 @@
   max-width: 250px;
 }
 
+/*Navigation Bar View*/
+.searchField {
+  margin-right: var(--lumo-space-s);
+  padding: var(--lumo-space-s);
+  padding: 0px 7px 0px;
+}
+
+.searchButton {
+  margin-right: var(--lumo-space-s);
+  padding: var(--lumo-space-s);
+  padding: 0px 5px 0px;
+}
+
+.searchBlock {
+  margin-right: var(--lumo-space-s);
+  float: right;
+}
+
+/*Current Day View*/
+.current-info {
+  background-color: gray;
+}
