@@ -1,9 +1,66 @@
+/* General Layout View */
+.current-info {
+  width: 100%;
+}
+
 /* Current Day View */
 .current-day-view {
-    border-radius: 20px;
-  }
-  
+  margin-left: 10%;
+}
+
+.current-temperature-info-view {
+  margin-right: 10%;
+}
+
+.current-day-view, .current-temperature-info-view {
+  /* background-color: rgba(80, 52, 78, 0.8); */
+  border-radius: 25px;
+}
+
 .city-location, .current-date {
-padding: var(--lumo-space-s);
-margin: 0px;
+  padding: 2px;
+  margin: 0px;
+  color: white;
+}
+
+.city-location {
+  line-height: 2;
+  font-size: 60px;
+  font-stretch: extra-expanded;
+}
+
+.current-date {
+  line-height: 0;
+  font-size: 40px;
+  font-weight: lighter;
+}
+
+.weather-icon {
+  margin-top: 50px;
+  width: 150px;
+}
+
+/* Current Temperature View */
+.current-temp, .minmax-temp {
+  color: white;
+  font-weight: lighter;
+  margin: 0;
+}
+
+.minmax-temp {
+  font-size: 50px;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 140px;
+  width: 100%;
+}
+
+
+.current-temp {
+  width: 100%;
+  line-height: 1;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 40px;
+  font-size: 200px;
 }

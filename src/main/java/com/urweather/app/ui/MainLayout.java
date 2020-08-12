@@ -11,7 +11,7 @@ import com.vaadin.flow.router.Route;
 @CssImport("./styles/shared-styles.css")
 public class MainLayout extends VerticalLayout {
     private static final long serialVersionUID = 1L;
-    
+
     NavigationView searchBar;
     CurrentInfoLayout currentInfoLayout;
 

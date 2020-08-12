@@ -9,22 +9,19 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("./styles/current-info-styles.css")
 public class CurrentDayView extends VerticalLayout {
+    private static final long serialVersionUID = 1L;
 
-    H1 cityLocation;
-    H2 currentDate;
-    Image weatherIcon;
+    H1 cityLocation = new H1("Richmond Hill");
+    H2 currentDate = new H2("August 12, 2020");
+    Image weatherIcon = new Image("frontend/weather_icons/PNG/512/day_partial_cloud.png", "Image Not Found");
 
     public CurrentDayView() {
         addClassName("current-day-view");
 
-        cityLocation = new H1("Richmond Hill");
         cityLocation.addClassName("city-location");
-        currentDate = new H2("Augus 12, 2020");
         currentDate.addClassName("current-date");
 
-        weatherIcon = new Image("frontend/sun.png", "Image Not Found");
         weatherIcon.addClassName("weather-icon");
-        weatherIcon.setWidth("300px");
 
         add(cityLocation, currentDate, weatherIcon);
     }

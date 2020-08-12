@@ -1,13 +1,7 @@
-/*
-   CSS styling examples for the Vaadin app.
-   Visit https://vaadin.com/docs/flow/theme/theming-overview.html and
-   https://vaadin.com/themes/lumo for more information.
-*/
-
 /*Navigation Bar View*/
 .navigation-bar {
   width: 100%;
-  margin-bottom: auto;
+  margin-bottom: 30px;
 }
 
 .searchField {
