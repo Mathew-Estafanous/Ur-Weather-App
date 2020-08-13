@@ -1,5 +1,6 @@
 /* General Layout View */
 .current-info {
+  margin-top: 0px;
   width: 100%;
 }
 
@@ -12,10 +13,10 @@
   margin-right: 10%;
 }
 
-.current-day-view, .current-temperature-info-view {
-  /* background-color: rgba(80, 52, 78, 0.8); */
+/* .current-day-view, .current-temperature-info-view {
+  background-color: rgba(80, 52, 78, 0.8);
   border-radius: 25px;
-}
+} */
 
 .city-location, .current-date {
   padding: 2px;

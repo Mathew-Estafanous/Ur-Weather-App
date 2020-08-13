@@ -14,13 +14,15 @@ public class MainLayout extends VerticalLayout {
 
     NavigationView searchBar;
     CurrentInfoLayout currentInfoLayout;
+    MoreDetailInfoLayout moreDetailInfoLayout;
 
     public MainLayout() {
         addClassName("main-layout");
         searchBar = new NavigationView();
         currentInfoLayout = new CurrentInfoLayout();
+        moreDetailInfoLayout = new MoreDetailInfoLayout();
 
-        add(searchBar, currentInfoLayout);
+        add(searchBar, currentInfoLayout, moreDetailInfoLayout);
     }
 
 }

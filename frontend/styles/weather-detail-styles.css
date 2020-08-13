@@ -1,0 +1,17 @@
+.more-detail-layout {
+    padding: 0px 50px 0px 50px;
+}
+
+
+.hourly-tab, .daily-tab, .details-tab {
+    font-size: large;
+    margin: 0px 20px;
+    background-color: rgb(000, 000, 000, 0.0);
+    color: white;
+}
+
+.tab-list {
+    margin-top: 0px;
+    width: 100%;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.466);
+}
