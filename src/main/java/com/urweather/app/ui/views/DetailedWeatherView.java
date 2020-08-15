@@ -5,8 +5,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class DetailedWeatherView extends HorizontalLayout {
     private static final long serialVersionUID = 1L;
-    
+
     public DetailedWeatherView() {
-        add(new H1("Detailed Weather HERE!"));
+        add(new H1("Detailed Weather HERE!!!!"));
     }
 }

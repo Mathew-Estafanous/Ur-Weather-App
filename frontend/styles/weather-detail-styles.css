@@ -1,4 +1,6 @@
+/* More Detail Tab & Layout */
 .more-detail-layout {
+    margin-top: 0px;
     padding: 0px 50px 0px 50px;
 }
 
@@ -14,4 +16,44 @@
     margin-top: 0px;
     width: 100%;
     border-bottom: 2px solid rgba(255, 255, 255, 0.466);
+}
+
+.list-of-views {
+    margin-top: 0px;
+}
+
+/* Hourly Weather View */
+.weather-snip-layout {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.weather-snip-div {
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.time-snip {
+    font-size: xx-large;
+    font-weight: lighter;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+.weather-icon-snip {
+    margin-top: 0px;
+    width: 35%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.temperature-snip {
+    margin-top: 15px;
+    width: 100%;
+    font-size: 30px;
+    text-align: center;
+    color: white;
 }

@@ -12,7 +12,7 @@ public class CurrentDayView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
     H1 cityLocation = new H1("Richmond Hill");
-    H2 currentDate = new H2("August 12, 2020");
+    H2 currentDate = new H2("August 13, 2020");
     Image weatherIcon = new Image("frontend/weather_icons/PNG/512/day_partial_cloud.png", "Image Not Found");
 
     public CurrentDayView() {

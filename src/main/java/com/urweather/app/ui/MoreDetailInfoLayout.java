@@ -3,9 +3,8 @@ package com.urweather.app.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.urweather.app.ui.views.DailyWeatherView;
 import com.urweather.app.ui.views.DetailedWeatherView;
-import com.urweather.app.ui.views.HourlyWeatherView;
+import com.urweather.app.ui.views.WeatherSnippetView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
@@ -22,8 +21,8 @@ public class MoreDetailInfoLayout extends VerticalLayout {
     Tab detailsTab = new Tab("Details");
 
     Div listOfViews = new Div();
-    HourlyWeatherView hourlyWeatherView = new HourlyWeatherView();
-    DailyWeatherView dailyWeatherView = new DailyWeatherView();
+    WeatherSnippetView hourlyWeatherView = new WeatherSnippetView();
+    WeatherSnippetView dailyWeatherView = new WeatherSnippetView();
     DetailedWeatherView detailedWeatherView = new DetailedWeatherView();
 
     public MoreDetailInfoLayout() {
@@ -38,10 +37,14 @@ public class MoreDetailInfoLayout extends VerticalLayout {
         listOfTabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         listOfTabs.setSelectedTab(hourlyTab);
 
-        // dailyWeatherView.setVisible(false);
-        // detailedWeatherView.setVisible(false);
+        dailyWeatherView.setVisible(false);
+        detailedWeatherView.setVisible(false);
         listOfViews = new Div(hourlyWeatherView, dailyWeatherView, detailedWeatherView);
+        listOfViews.addClassName("list-of-views");
         createTabChangeFunctionality();
+
+        fillHourlyViewWithFakeData();
+        fillDailyViewWithFakeData();
 
         add(listOfTabs, listOfViews);
     }
@@ -57,5 +60,23 @@ public class MoreDetailInfoLayout extends VerticalLayout {
             Component selectedView = tabsToView.get(listOfTabs.getSelectedTab());
             selectedView.setVisible(true);
         });
+    }
+
+    private void fillHourlyViewWithFakeData() {
+        hourlyWeatherView.addWeatherSnippet("NOW", "frontend/weather_icons/PNG/256/day_clear.png", "28°");
+        hourlyWeatherView.addWeatherSnippet("1 PM", "frontend/weather_icons/PNG/256/day_clear.png", "29°");
+        hourlyWeatherView.addWeatherSnippet("3 PM", "frontend/weather_icons/PNG/256/day_clear.png", "29°");
+        hourlyWeatherView.addWeatherSnippet("4 PM", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "29°");
+        hourlyWeatherView.addWeatherSnippet("5 PM", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "28°");
+        hourlyWeatherView.addWeatherSnippet("6 PM", "frontend/weather_icons/PNG/256/rain.png", "27°");
+    }
+
+    private void fillDailyViewWithFakeData() {
+        dailyWeatherView.addWeatherSnippet("FRIDAY", "frontend/weather_icons/PNG/256/day_clear.png", "29°/18°");
+        dailyWeatherView.addWeatherSnippet("SATURDAY", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "27°/19°");
+        dailyWeatherView.addWeatherSnippet("SUNDAY", "frontend/weather_icons/PNG/256/rain.png", "24°/17°");
+        dailyWeatherView.addWeatherSnippet("MONDAY", "frontend/weather_icons/PNG/256/thunder.png", "26°/14°");
+        dailyWeatherView.addWeatherSnippet("TUESDAY", "frontend/weather_icons/PNG/256/day_clear.png", "23°/13°");
+        dailyWeatherView.addWeatherSnippet("WEDNESDAY", "frontend/weather_icons/PNG/256/day_clear.png", "24°/14°");
     }
 }

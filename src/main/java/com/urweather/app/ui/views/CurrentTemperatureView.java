@@ -9,8 +9,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class CurrentTemperatureView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    H1 currentTemp = new H1("25°");
-    H3 minMaxTemp = new H3("28° / 21°");
+    H1 currentTemp = new H1("28°");
+    H3 minMaxTemp = new H3("29° / 21°");
 
     public CurrentTemperatureView() {
         addClassName("current-temperature-info-view");
