@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -13,17 +14,26 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 @CssImport("./styles/shared-styles.css")
 public class NavigationView extends Header {
     private static final long serialVersionUID = 1L;
 
-    GeoLocationService geoLocationService = new GeoLocationService();
+    @Autowired
+    private GeoLocationService geoLocationService;
+    @Autowired
+    private DailyWeatherService dailyWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
     Div searchBlock = new Div();
 
-    public NavigationView() {
+    public NavigationView(GeoLocationService geoLocationService, DailyWeatherService dailyWeatherService) {
+        this.geoLocationService = geoLocationService;
+        this.dailyWeatherService = dailyWeatherService;
         addClassName("navigation-bar");
 
         searchButton.addClassName("searchButton");
@@ -42,18 +52,25 @@ public class NavigationView extends Header {
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            callGeoLocationService();
+            callDailyWeatherService(callGeoLocationService());
         });
     }
 
-    private void callGeoLocationService() {
-        GeoLocationObject result;
+    private void callDailyWeatherService(GeoLocationObject geoLocation) {
         try {
-            result = geoLocationService.getGeoLocationObjFromString(searchField.getValue());
+            dailyWeatherService.createDailyWeatherInformation(geoLocation);
+        } catch (JsonSyntaxException | IOException e) {
+            Notification.show(e.getMessage());
+        }
+    }
+
+    private GeoLocationObject callGeoLocationService() {
+        GeoLocationObject geoLocation = new GeoLocationObject();
+        try {
+            geoLocation = geoLocationService.getGeoLocationObjFromString(searchField.getValue());
         } catch (JsonSyntaxException | InputMismatchException | IOException e) {
             Notification.show(e.toString());
-            return;
         }
-        Notification.show(Double.toString(result.getLatitude()));
+        return geoLocation;
     }
 }

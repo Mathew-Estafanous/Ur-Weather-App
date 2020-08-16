@@ -1,35 +1,26 @@
 package com.urweather.app.backend.entity;
 
-import java.util.List;
+import java.util.Date;
 
-import com.google.gson.JsonObject;
+import javax.persistence.Entity;
 
+import com.google.gson.annotations.SerializedName;
+
+@Entity
 public class DayInformationEntity extends AbstractEntity {
-
+    private static final long serialVersionUID = 1L;
     private double min;
     private double max;
 
-    private double lat;
-    private double lon;
+    @SerializedName("lat")
+    private double latitude;
+    @SerializedName("lon")
+    private double longitude;
 
-    private List<JsonObject> temp;
-
-    public DayInformationEntity(double min, double max, double lat, double lon, List<JsonObject> temp) {
-        this.min = min;
-        this.max = max;
-        this.lat = lat;
-        this.lon = lon;
-        this.temp = temp;
-    }
-
-    public void parseTempListToTemperatureInfo() {
-        this.min = temp.get(0).get("min").getAsJsonObject().get("value").getAsDouble();
-        this.max = temp.get(1).get("max").getAsJsonObject().get("value").getAsDouble();
-    }
-
-    public Object getMinTemp() {
-        return temp.get(0);
-    }
+    @SerializedName("observation_time")
+    private Date observationTime;
+    @SerializedName("weather_code")
+    private String weatherCode;
 
     public double getMin() {
         return min;
@@ -48,19 +39,34 @@ public class DayInformationEntity extends AbstractEntity {
     }
 
     public double getLat() {
-        return lat;
+        return latitude;
     }
 
     public void setLat(int lat) {
-        this.lat = lat;
+        this.longitude = lat;
     }
 
     public double getLon() {
-        return lon;
+        return longitude;
     }
 
     public void setLon(int lon) {
-        this.lon = lon;
+        this.longitude = lon;
     }
 
+    public Date getObservationTime() {
+        return observationTime;
+    }
+
+    public void setObservationTime(Date observationTime) {
+        this.observationTime = observationTime;
+    }
+
+    public String getWeatherCode() {
+        return weatherCode;
+    }
+
+    public void setWeatherCode(String weatherCode) {
+        this.weatherCode = weatherCode;
+    }
 }
