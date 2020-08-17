@@ -22,6 +22,11 @@ public class DayInformationEntity extends AbstractEntity {
     @SerializedName("weather_code")
     private String weatherCode;
 
+    @SerializedName("city_name")
+    private String cityName;
+    @SerializedName("country_code")
+    private String countryCode;
+
     public double getMin() {
         return min;
     }
@@ -68,5 +73,21 @@ public class DayInformationEntity extends AbstractEntity {
 
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 }

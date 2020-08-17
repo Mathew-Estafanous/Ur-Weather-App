@@ -1,4 +1,4 @@
-package com.urweather.app.ui;
+package com.urweather.app.ui.layouts;
 
 import com.urweather.app.ui.views.NavigationView;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -16,16 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MainLayout extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    NavigationView searchBar;
+    @Autowired
+    private NavigationView searchBar;
+    @Autowired
+    private CurrentInfoLayout currentInfoLayout;
 
-    CurrentInfoLayout currentInfoLayout;
     MoreDetailInfoLayout moreDetailInfoLayout;
 
-    @Autowired
-    public MainLayout(NavigationView searchBar) {
+    public MainLayout(NavigationView searchBar, CurrentInfoLayout currentInfoLayout) {
         this.searchBar = searchBar;
+        this.currentInfoLayout = currentInfoLayout;
         addClassName("main-layout");
-        currentInfoLayout = new CurrentInfoLayout();
         moreDetailInfoLayout = new MoreDetailInfoLayout();
 
         add(searchBar, currentInfoLayout, moreDetailInfoLayout);

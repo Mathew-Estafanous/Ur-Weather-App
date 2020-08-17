@@ -7,12 +7,15 @@ import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
+import com.urweather.app.ui.events.UpdateTodayWeatherEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.shared.Registration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,6 +56,7 @@ public class NavigationView extends Header {
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
             callDailyWeatherService(callGeoLocationService());
+            fireEvent(new UpdateTodayWeatherEvent(this));
         });
     }
 
@@ -72,5 +76,9 @@ public class NavigationView extends Header {
             Notification.show(e.toString());
         }
         return geoLocation;
+    }
+
+    public Registration addTodayUpdatedListener(ComponentEventListener<UpdateTodayWeatherEvent> listener) {
+        return addListener(UpdateTodayWeatherEvent.class, listener);
     }
 }

@@ -1,4 +1,4 @@
-package com.urweather.app.ui;
+package com.urweather.app.ui.layouts;
 
 import java.util.HashMap;
 import java.util.Map;

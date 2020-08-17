@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.DayInformationEntity;
@@ -48,12 +49,16 @@ public class DailyWeatherService {
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
 
-        List<DayInformationEntity> listOfDayEntities = parseBodyAndReturnDayInformationEntity(responseBody);
+        List<DayInformationEntity> listOfDayEntities = parseBodyAndReturnDayInformationEntity(responseBody, geoLocation);
         addDailyWeatherEntityToRepository(listOfDayEntities);
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities() {
         return dayInformationRepository.findAll();
+    }
+
+    public DayInformationEntity getFirstDayWeatherEntity() {
+        return dayInformationRepository.findAll().get(0);
     }
 
     private void addDailyWeatherEntityToRepository(List<DayInformationEntity> listOfDays) {
@@ -63,17 +68,19 @@ public class DailyWeatherService {
         dayInformationRepository.saveAll(listOfDays);
     }
 
-    private List<DayInformationEntity> parseBodyAndReturnDayInformationEntity(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    private List<DayInformationEntity> parseBodyAndReturnDayInformationEntity(ResponseBody responseBody,
+                                                    GeoLocationObject geoLocation) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         Type userType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedDayJsonList = gson.fromJson(responseBody.string(), userType);
         return unParsedDayJsonList.stream()
-                .map(day -> createDayInormationEntity(day))
+                .map(day -> createDayInormationEntity(day, geoLocation))
                 .collect(Collectors.toList());
     }
 
-    private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject) {
+    private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject, GeoLocationObject geoLocationObject) {
         JsonObject dayInformationJson = new JsonObject();
+        Gson gson = new Gson();
         dayInformationJson.add("lat", dayJsonObject.get("lat"));
         dayInformationJson.add("lon", dayJsonObject.get("lon"));
         dayInformationJson.add("observation_time", dayJsonObject.get("observation_time")
@@ -85,8 +92,10 @@ public class DailyWeatherService {
                                         .get("min").getAsJsonObject().get("value"));
         dayInformationJson.add("max", tempJsonArray.get(1).getAsJsonObject()
                                         .get("max").getAsJsonObject().get("value"));
+        dayInformationJson.addProperty("city_name", geoLocationObject.getName());
+        dayInformationJson.addProperty("country_code", geoLocationObject.getCountryCode());
 
-        return new Gson().fromJson(dayInformationJson.toString(), DayInformationEntity.class);
+        return gson.fromJson(dayInformationJson.toString(), DayInformationEntity.class);
     }
 
     private HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
