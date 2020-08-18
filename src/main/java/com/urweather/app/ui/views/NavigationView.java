@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
+import com.urweather.app.backend.service.HourlyWeatherService;
 import com.urweather.app.ui.events.UpdateTodayWeatherEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -29,14 +30,19 @@ public class NavigationView extends Header {
     private GeoLocationService geoLocationService;
     @Autowired
     private DailyWeatherService dailyWeatherService;
+    @Autowired
+    private HourlyWeatherService hourlyWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
     Div searchBlock = new Div();
 
-    public NavigationView(GeoLocationService geoLocationService, DailyWeatherService dailyWeatherService) {
+    public NavigationView(GeoLocationService geoLocationService,
+                            DailyWeatherService dailyWeatherService,
+                            HourlyWeatherService hourlyWeatherService) {
         this.geoLocationService = geoLocationService;
         this.dailyWeatherService = dailyWeatherService;
+        this.hourlyWeatherService = hourlyWeatherService;
         addClassName("navigation-bar");
 
         searchButton.addClassName("searchButton");
@@ -55,16 +61,36 @@ public class NavigationView extends Header {
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            callDailyWeatherService(callGeoLocationService());
-            fireEvent(new UpdateTodayWeatherEvent(this));
+            GeoLocationObject geoLocation = callGeoLocationService();
+            boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
+            boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
+
+            if(didDailyServiceWork) {
+                fireEvent(new UpdateTodayWeatherEvent(this));
+            }
+            if(didHourlyServiceWork) {
+                Notification.show("HOURLY SERVICE WORKED!!!");
+            }
         });
     }
 
-    private void callDailyWeatherService(GeoLocationObject geoLocation) {
+    private boolean callHourlyWeatherService(GeoLocationObject geoLocation) {
+        try {
+            hourlyWeatherService.createHourlyWeatherInformation(geoLocation);
+            return true;
+        } catch (IOException | NullPointerException e) {
+            Notification.show(e.getMessage());
+            return false;
+        }
+    }
+
+    private boolean callDailyWeatherService(GeoLocationObject geoLocation) {
         try {
             dailyWeatherService.createDailyWeatherInformation(geoLocation);
+            return true;
         } catch (JsonSyntaxException | IOException e) {
             Notification.show(e.getMessage());
+            return false;
         }
     }
 

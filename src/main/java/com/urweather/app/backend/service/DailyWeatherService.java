@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.DayInformationEntity;

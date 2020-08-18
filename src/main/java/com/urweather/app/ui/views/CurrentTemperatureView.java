@@ -1,10 +1,12 @@
 package com.urweather.app.ui.views;
 
+import com.urweather.app.backend.entity.DayInformationEntity;
+import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.service.DailyWeatherService;
+import com.urweather.app.backend.service.HourlyWeatherService;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,12 @@ import org.springframework.stereotype.Component;
 public class CurrentTemperatureView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
+    private final String DEGREE_SYMBOL = "°";
+
     @Autowired
     private DailyWeatherService dailyWeatherService;
+    @Autowired
+    private HourlyWeatherService hourlyWeatherService;
 
     H1 currentTemp = new H1("28°");
     H3 minMaxTemp = new H3("29° / 21°");
@@ -32,6 +38,12 @@ public class CurrentTemperatureView extends VerticalLayout {
     }
 
     public void updateDayTemperatureView() {
-        Notification.show("UPDATED DAY'S TEMPERATURE VIEW");
+        DayInformationEntity dayInformation = dailyWeatherService.getFirstDayWeatherEntity();
+        String minTemp = Integer.toString((int) Math.round(dayInformation.getMin())) + DEGREE_SYMBOL;
+        String maxTemp = Integer.toString((int) Math.round(dayInformation.getMax())) + DEGREE_SYMBOL;
+        minMaxTemp.setText(maxTemp + " / " + minTemp);
+
+        HourlyInformationEntity hourInformation = hourlyWeatherService.getFirstHourInformation();
+        currentTemp.setText(Integer.toString((int) Math.round(hourInformation.getCurrentTemp())) + DEGREE_SYMBOL);
     }
 }

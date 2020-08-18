@@ -151,6 +151,11 @@
             <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>net.iakovlev</groupId>
+            <artifactId>timeshape</artifactId>
+            <version>2020a.10</version>
+        </dependency>
     </dependencies>
 
     <build>

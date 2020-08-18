@@ -31,8 +31,11 @@ public class GeoLocationService {
 
         HttpUrl.Builder urlBuilder = createUrlBuilder(splitUserInput);
 
-        Request request = new Request.Builder().url(urlBuilder.toString()).get().addHeader("x-rapidapi-host", API_URL)
-                .addHeader("x-rapidapi-key", API_KEY).build();
+        Request request = new Request.Builder().url(urlBuilder.toString())
+                            .get()
+                            .addHeader("x-rapidapi-host", API_URL)
+                            .addHeader("x-rapidapi-key", API_KEY)
+                            .build();
 
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
@@ -53,7 +56,7 @@ public class GeoLocationService {
         return new HttpUrl.Builder().scheme("https").host(API_URL)
                 .addPathSegment("v1").addPathSegment("geo").addPathSegment("cities")
                 .addQueryParameter("namePrefix", splitUserInput[0])
-                .addQueryParameter("countryIds", splitUserInput[1]);
+                .addQueryParameter("countryIds", splitUserInput[1].replaceAll("\\s+", ""));
     }
 
     private String[] parseAndReturnCityAndCountry(String userInput) throws InputMismatchException {
