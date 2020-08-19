@@ -1,4 +1,4 @@
-package com.urweather.app.ui.reusables;
+package com.urweather.app.ui.views.reusables;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H3;

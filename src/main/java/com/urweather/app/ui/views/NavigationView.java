@@ -8,6 +8,7 @@ import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.HourlyWeatherService;
+import com.urweather.app.ui.events.UpdateHourlyWeatherEvent;
 import com.urweather.app.ui.events.UpdateTodayWeatherEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -26,17 +27,15 @@ import org.springframework.stereotype.Component;
 public class NavigationView extends Header {
     private static final long serialVersionUID = 1L;
 
-    @Autowired
     private GeoLocationService geoLocationService;
-    @Autowired
     private DailyWeatherService dailyWeatherService;
-    @Autowired
     private HourlyWeatherService hourlyWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
     Div searchBlock = new Div();
 
+    @Autowired
     public NavigationView(GeoLocationService geoLocationService,
                             DailyWeatherService dailyWeatherService,
                             HourlyWeatherService hourlyWeatherService) {
@@ -50,7 +49,7 @@ public class NavigationView extends Header {
         searchBlock.add(searchButton);
 
         searchBlock.addClassName("searchBlock");
-        searchField.setPlaceholder("Richmond Hill, Canada");
+        searchField.setPlaceholder("Richmond Hill, CA");
         searchField.setWidth("15em");
         searchField.addClassName("searchField");
         searchBlock.add(searchField);
@@ -61,15 +60,16 @@ public class NavigationView extends Header {
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            GeoLocationObject geoLocation = callGeoLocationService();
+            GeoLocationObject geoLocation = callGeoLocationService(searchField.getValue());
             boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
             boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
 
             if(didDailyServiceWork) {
                 fireEvent(new UpdateTodayWeatherEvent(this));
             }
+
             if(didHourlyServiceWork) {
-                Notification.show("HOURLY SERVICE WORKED!!!");
+                fireEvent(new UpdateHourlyWeatherEvent(this));
             }
         });
     }
@@ -94,10 +94,10 @@ public class NavigationView extends Header {
         }
     }
 
-    private GeoLocationObject callGeoLocationService() {
+    private GeoLocationObject callGeoLocationService(String location) {
         GeoLocationObject geoLocation = new GeoLocationObject();
         try {
-            geoLocation = geoLocationService.getGeoLocationObjFromString(searchField.getValue());
+            geoLocation = geoLocationService.getGeoLocationObjFromString(location);
         } catch (JsonSyntaxException | InputMismatchException | IOException e) {
             Notification.show(e.toString());
         }
@@ -106,5 +106,9 @@ public class NavigationView extends Header {
 
     public Registration addTodayUpdatedListener(ComponentEventListener<UpdateTodayWeatherEvent> listener) {
         return addListener(UpdateTodayWeatherEvent.class, listener);
+    }
+
+    public Registration addHourlyWeatherUpdatedListener(ComponentEventListener<UpdateHourlyWeatherEvent> listener) {
+        return addListener(UpdateHourlyWeatherEvent.class , listener);
     }
 }

@@ -3,8 +3,10 @@ package com.urweather.app.ui.layouts;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.urweather.app.ui.views.DailyWeatherSnippetView;
 import com.urweather.app.ui.views.DetailedWeatherView;
-import com.urweather.app.ui.views.WeatherSnippetView;
+import com.urweather.app.ui.views.HourlyWeatherSnippetView;
+import com.urweather.app.ui.views.NavigationView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
@@ -12,8 +14,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+@org.springframework.stereotype.Component
 @CssImport("./styles/weather-detail-styles.css")
 public class MoreDetailInfoLayout extends VerticalLayout {
+
+    private NavigationView searchBar;
 
     Tabs listOfTabs = new Tabs();
     Tab hourlyTab = new Tab("Hourly");
@@ -21,12 +28,17 @@ public class MoreDetailInfoLayout extends VerticalLayout {
     Tab detailsTab = new Tab("Details");
 
     Div listOfViews = new Div();
-    WeatherSnippetView hourlyWeatherView = new WeatherSnippetView();
-    WeatherSnippetView dailyWeatherView = new WeatherSnippetView();
+    HourlyWeatherSnippetView hourlyWeatherView;
+    DailyWeatherSnippetView dailyWeatherView;
     DetailedWeatherView detailedWeatherView = new DetailedWeatherView();
 
-    public MoreDetailInfoLayout() {
-        this.addClassName("more-detail-layout");
+    @Autowired
+    public MoreDetailInfoLayout(NavigationView searchBar, DailyWeatherSnippetView dailyWeatherView,
+                                    HourlyWeatherSnippetView hourlyWeatherSnippetView) {
+        this.searchBar = searchBar;
+        this.dailyWeatherView = dailyWeatherView;
+        this.hourlyWeatherView = hourlyWeatherSnippetView;
+        addClassName("more-detail-layout");
 
         hourlyTab.addClassName("hourly-tab");
         dailyTab.addClassName("daily-tab");
@@ -42,6 +54,7 @@ public class MoreDetailInfoLayout extends VerticalLayout {
         listOfViews = new Div(hourlyWeatherView, dailyWeatherView, detailedWeatherView);
         listOfViews.addClassName("list-of-views");
         createTabChangeFunctionality();
+        addListenerForEachView();
 
         fillHourlyViewWithFakeData();
         fillDailyViewWithFakeData();
@@ -59,6 +72,13 @@ public class MoreDetailInfoLayout extends VerticalLayout {
             tabsToView.values().forEach(view -> view.setVisible(false));
             Component selectedView = tabsToView.get(listOfTabs.getSelectedTab());
             selectedView.setVisible(true);
+        });
+    }
+
+    private void addListenerForEachView() {
+        searchBar.addHourlyWeatherUpdatedListener(e -> {
+            hourlyWeatherView.updateWeatherInformation();
+            dailyWeatherView.updateWeatherInformation();
         });
     }
 

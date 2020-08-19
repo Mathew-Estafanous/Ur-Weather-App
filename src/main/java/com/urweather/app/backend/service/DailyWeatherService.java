@@ -52,8 +52,9 @@ public class DailyWeatherService {
         addDailyWeatherEntityToRepository(listOfDayEntities);
     }
 
-    public List<DayInformationEntity> getListOfDailyWeatherEntities() {
-        return dayInformationRepository.findAll();
+    public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
+        return dayInformationRepository.findAll().stream().limit(total)
+                .collect(Collectors.toList());
     }
 
     public DayInformationEntity getFirstDayWeatherEntity() {

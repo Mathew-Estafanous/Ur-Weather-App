@@ -54,4 +54,12 @@ public class HourlyInformationEntity extends AbstractEntity {
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
     }
+
+    public Date getHourTime() {
+        return hourTime;
+    }
+
+    public void setHourTime(Date hourTime) {
+        this.hourTime = hourTime;
+    }
 }

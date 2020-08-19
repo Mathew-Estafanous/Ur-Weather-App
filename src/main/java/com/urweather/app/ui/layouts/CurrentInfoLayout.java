@@ -6,6 +6,7 @@ import com.urweather.app.ui.views.NavigationView;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -14,10 +15,11 @@ import org.springframework.stereotype.Component;
 public class CurrentInfoLayout extends HorizontalLayout {
     private static final long serialVersionUID = 1L;
 
-    NavigationView searchBar;
-    CurrentDayView currentDayView;
-    CurrentTemperatureView currentTemperatureView;
+    private NavigationView searchBar;
+    private CurrentDayView currentDayView;
+    private CurrentTemperatureView currentTemperatureView;
 
+    @Autowired
     public CurrentInfoLayout(CurrentDayView currentDayView, CurrentTemperatureView currentTemperatureView,
                                 NavigationView searchBar) {
         addClassName("current-info");
@@ -26,11 +28,11 @@ public class CurrentInfoLayout extends HorizontalLayout {
         this.currentTemperatureView = currentTemperatureView;
         this.searchBar = searchBar;
 
-        addListener();
+        addListenerForViews();
         add(currentDayView, currentTemperatureView);
     }
 
-    private void addListener() {
+    private void addListenerForViews() {
         searchBar.addTodayUpdatedListener(e -> {
             currentDayView.updateDayViewInformation();
             currentTemperatureView.updateDayTemperatureView();

@@ -19,16 +19,17 @@ public class CurrentTemperatureView extends VerticalLayout {
 
     private final String DEGREE_SYMBOL = "°";
 
-    @Autowired
     private DailyWeatherService dailyWeatherService;
-    @Autowired
     private HourlyWeatherService hourlyWeatherService;
 
     H1 currentTemp = new H1("28°");
     H3 minMaxTemp = new H3("29° / 21°");
 
-    public CurrentTemperatureView(DailyWeatherService dailyWeatherService) {
+    @Autowired
+    public CurrentTemperatureView(DailyWeatherService dailyWeatherService,
+                                    HourlyWeatherService hourlyWeatherService) {
         this.dailyWeatherService = dailyWeatherService;
+        this.hourlyWeatherService = hourlyWeatherService;
         addClassName("current-temperature-info-view");
 
         currentTemp.addClassName("current-temp");

@@ -16,20 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MainLayout extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    @Autowired
     private NavigationView searchBar;
-    @Autowired
     private CurrentInfoLayout currentInfoLayout;
+    private MoreDetailInfoLayout moreDetailInfoLayout;
 
-    MoreDetailInfoLayout moreDetailInfoLayout;
-
-    public MainLayout(NavigationView searchBar, CurrentInfoLayout currentInfoLayout) {
+    @Autowired
+    public MainLayout(NavigationView searchBar,
+                        CurrentInfoLayout currentInfoLayout,
+                        MoreDetailInfoLayout moreDetailInfoLayout) {
         this.searchBar = searchBar;
         this.currentInfoLayout = currentInfoLayout;
+        this.moreDetailInfoLayout = moreDetailInfoLayout;
         addClassName("main-layout");
-        moreDetailInfoLayout = new MoreDetailInfoLayout();
 
-        add(searchBar, currentInfoLayout, moreDetailInfoLayout);
+        add(this.searchBar, this.currentInfoLayout, this.moreDetailInfoLayout);
     }
 
 }
