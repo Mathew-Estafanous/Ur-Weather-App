@@ -5,12 +5,14 @@ import com.urweather.app.ui.views.CurrentTemperatureView;
 import com.urweather.app.ui.views.NavigationView;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
+@UIScope
 @CssImport("./styles/current-info-styles.css")
 public class CurrentInfoLayout extends HorizontalLayout {
     private static final long serialVersionUID = 1L;

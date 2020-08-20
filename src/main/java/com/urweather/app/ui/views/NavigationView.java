@@ -18,12 +18,14 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @CssImport("./styles/shared-styles.css")
+@UIScope
 public class NavigationView extends Header {
     private static final long serialVersionUID = 1L;
 

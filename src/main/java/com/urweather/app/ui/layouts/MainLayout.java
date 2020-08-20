@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MainLayout extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    private NavigationView searchBar;
-    private CurrentInfoLayout currentInfoLayout;
-    private MoreDetailInfoLayout moreDetailInfoLayout;
+    private final NavigationView searchBar;
+    private final CurrentInfoLayout currentInfoLayout;
+    private final MoreDetailInfoLayout moreDetailInfoLayout;
 
     @Autowired
     public MainLayout(NavigationView searchBar,

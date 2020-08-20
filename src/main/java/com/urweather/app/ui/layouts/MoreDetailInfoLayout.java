@@ -13,10 +13,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component
+@UIScope
 @CssImport("./styles/weather-detail-styles.css")
 public class MoreDetailInfoLayout extends VerticalLayout {
 

@@ -14,11 +14,13 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@UIScope
 @CssImport("./styles/current-info-styles.css")
 public class CurrentDayView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
