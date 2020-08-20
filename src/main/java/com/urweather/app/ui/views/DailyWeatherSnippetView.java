@@ -6,11 +6,13 @@ import java.util.List;
 import com.urweather.app.backend.entity.DayInformationEntity;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.helpers.ImageIconHelper;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@UIScope
 public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     private DailyWeatherService dailyWeatherService;

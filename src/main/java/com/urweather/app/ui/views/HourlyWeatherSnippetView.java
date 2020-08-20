@@ -6,11 +6,13 @@ import java.util.List;
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.service.HourlyWeatherService;
 import com.urweather.app.helpers.ImageIconHelper;
+import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@UIScope
 public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     private HourlyWeatherService hourlyWeatherService;
