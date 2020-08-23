@@ -24,7 +24,8 @@ public class GeoLocationService {
     private final String API_KEY = "be30b7151fmsh5d10acd0004f7d9p10b38cjsn7da69bed5f1a";
     private final String API_URL = "wft-geo-db.p.rapidapi.com";
 
-    public final GeoLocationObject getGeoLocationObjFromString(String userInput) throws JsonSyntaxException, InputMismatchException, IOException {
+    public final GeoLocationObject getGeoLocationObjFromString(String userInput) throws JsonSyntaxException, InputMismatchException,
+                                                                            IOException, IndexOutOfBoundsException {
 
         String[] splitUserInput = parseAndReturnCityAndCountry(userInput);
         OkHttpClient client = new OkHttpClient();
@@ -43,13 +44,17 @@ public class GeoLocationService {
         return parseResponseBody(responseBody);
     }
 
-    private GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    private GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException, IndexOutOfBoundsException {
         Gson gson = new Gson();
         Type jsonType = new TypeToken<JsonObject>() {}.getType();
         JsonObject jsonObj = gson.fromJson(responseBody.string(), jsonType);
 
         Type geoLocationType = new TypeToken<GeoLocationObject>() {}.getType();
-        return gson.fromJson(jsonObj.get("data").getAsJsonArray().get(0).getAsJsonObject().toString(), geoLocationType);
+        try {
+            return gson.fromJson(jsonObj.get("data").getAsJsonArray().get(0).getAsJsonObject().toString(), geoLocationType);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("No data found relating to that City/Country. Please review your input.");
+        }
     }
 
     private HttpUrl.Builder createUrlBuilder(String[] splitUserInput) {

@@ -1,9 +1,5 @@
 package com.urweather.app.ui.views;
 
-import java.io.IOException;
-import java.util.InputMismatchException;
-
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
@@ -63,15 +59,16 @@ public class NavigationView extends Header {
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
             GeoLocationObject geoLocation = callGeoLocationService(searchField.getValue());
-            boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
-            boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
+            if(geoLocation != null) {
+                boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
+                boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
 
-            if(didDailyServiceWork) {
-                fireEvent(new UpdateTodayWeatherEvent(this));
-            }
-
-            if(didHourlyServiceWork) {
-                fireEvent(new UpdateHourlyWeatherEvent(this));
+                if(didDailyServiceWork) {
+                    fireEvent(new UpdateTodayWeatherEvent(this));
+                }
+                if(didHourlyServiceWork) {
+                    fireEvent(new UpdateHourlyWeatherEvent(this));
+                }
             }
         });
     }
@@ -80,7 +77,7 @@ public class NavigationView extends Header {
         try {
             hourlyWeatherService.createHourlyWeatherInformation(geoLocation);
             return true;
-        } catch (IOException | NullPointerException e) {
+        } catch (Exception e) {
             Notification.show(e.getMessage());
             return false;
         }
@@ -90,20 +87,20 @@ public class NavigationView extends Header {
         try {
             dailyWeatherService.createDailyWeatherInformation(geoLocation);
             return true;
-        } catch (JsonSyntaxException | IOException e) {
+        } catch (Exception e) {
             Notification.show(e.getMessage());
             return false;
         }
     }
 
     private GeoLocationObject callGeoLocationService(String location) {
-        GeoLocationObject geoLocation = new GeoLocationObject();
         try {
-            geoLocation = geoLocationService.getGeoLocationObjFromString(location);
-        } catch (JsonSyntaxException | InputMismatchException | IOException e) {
+            GeoLocationObject geoLocation = geoLocationService.getGeoLocationObjFromString(location);
+            return geoLocation;
+        } catch (Exception e) {
             Notification.show(e.toString());
+            return null;
         }
-        return geoLocation;
     }
 
     public Registration addTodayUpdatedListener(ComponentEventListener<UpdateTodayWeatherEvent> listener) {
