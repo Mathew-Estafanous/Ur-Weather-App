@@ -25,15 +25,14 @@ import org.springframework.stereotype.Component;
 public class CurrentDayView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    @Autowired
     private DailyWeatherService dailyWeatherService;
-    @Autowired
     private HourlyWeatherService hourlyWeatherService;
 
     H1 cityLocation = new H1("Richmond Hill");
     H2 currentDate = new H2("August 13, 2020");
     Image weatherIcon = new Image("frontend/weather_icons/PNG/512/day_partial_cloud.png", "Image Not Found");
 
+    @Autowired
     public CurrentDayView(DailyWeatherService dailyWeatherService,
                             HourlyWeatherService hourlyWeatherService) {
         this.dailyWeatherService = dailyWeatherService;

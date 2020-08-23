@@ -1,11 +1,13 @@
 package com.urweather.app.ui.views;
 
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.service.HourlyWeatherService;
 import com.urweather.app.helpers.ImageIconHelper;
+import com.urweather.app.helpers.TimezoneConvertorHelper;
 import com.vaadin.flow.spring.annotation.UIScope;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,10 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
         deleteAllCurrentSnippets();
 
         listOfHourlyInformation.forEach(hour -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("hh a");
-            String time = dateFormat.format(hour.getHourTime()).toUpperCase();
+            ZonedDateTime convertedToTimezone = TimezoneConvertorHelper.convertDateToLocalTimezone(hour.getLatitude(),
+                                        hour.getLongitude(), hour.getHourTime());
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("hh a");
+            String time =  convertedToTimezone.format(dateFormat).toUpperCase();
             String temp = Math.round(hour.getCurrentTemp()) + DEGREE_SYMBOL;
             String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCode(hour.getWeatherCode());
             addWeatherSnippet(time, imageSrc, temp);
