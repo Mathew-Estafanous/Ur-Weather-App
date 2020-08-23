@@ -30,10 +30,10 @@ public class DailyWeatherService {
     private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
     @Autowired
-    private DayInformationRepository dayInformationRepository;
+    private DayInformationRepository dayInformationRepo;
 
-    public DailyWeatherService(DayInformationRepository dayInformationRepository) {
-        this.dayInformationRepository = dayInformationRepository;
+    public DailyWeatherService(DayInformationRepository dayInformationRepo) {
+        this.dayInformationRepo = dayInformationRepo;
     }
 
 
@@ -53,19 +53,19 @@ public class DailyWeatherService {
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
-        return dayInformationRepository.findAll().stream().limit(total)
+        return dayInformationRepo.findAll().stream().limit(total)
                 .collect(Collectors.toList());
     }
 
     public DayInformationEntity getFirstDayWeatherEntity() {
-        return dayInformationRepository.findAll().get(0);
+        return dayInformationRepo.findAll(0);
     }
 
     private void addDailyWeatherEntityToRepository(List<DayInformationEntity> listOfDays) {
-        if(dayInformationRepository.count() != 0) {
-            dayInformationRepository.deleteAll();
+        if(dayInformationRepo.count() != 0) {
+            dayInformationRepo.deleteAll();
         }
-        dayInformationRepository.saveAll(listOfDays);
+        dayInformationRepo.saveAll(listOfDays);
     }
 
     private List<DayInformationEntity> parseBodyAndReturnDayInformationEntity(ResponseBody responseBody,

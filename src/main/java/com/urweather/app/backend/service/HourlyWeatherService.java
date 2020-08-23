@@ -33,10 +33,10 @@ public class HourlyWeatherService {
     private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
     @Autowired
-    private HourlyInformationRepository hourlyInformationRepository;
+    private HourlyInformationRepository hourlyInformationRepo;
 
-    private HourlyWeatherService(HourlyInformationRepository hourlyInformationRepository) {
-        this.hourlyInformationRepository = hourlyInformationRepository;
+    private HourlyWeatherService(HourlyInformationRepository hourlyInformationRep) {
+        this.hourlyInformationRepo = hourlyInformationRep;
     }
 
     public void createHourlyWeatherInformation(GeoLocationObject geoLocation) throws NullPointerException, IOException {
@@ -56,18 +56,18 @@ public class HourlyWeatherService {
     }
 
     public HourlyInformationEntity getFirstHourInformation() {
-        return hourlyInformationRepository.findAll().get(0);
+        return hourlyInformationRepo.findAll(0);
     }
 
     public List<HourlyInformationEntity> getListOfHourlyInformation() {
-        return hourlyInformationRepository.findAll();
+        return hourlyInformationRepo.findAll();
     }
 
     private void addHourlyInformationToRepository(List<HourlyInformationEntity> listOfHourEntities) {
-        if(hourlyInformationRepository.count() != 0) {
-            hourlyInformationRepository.deleteAll();
+        if(hourlyInformationRepo.count() != 0) {
+            hourlyInformationRepo.deleteAll();
         }
-        hourlyInformationRepository.saveAll(listOfHourEntities);
+        hourlyInformationRepo.saveAll(listOfHourEntities);
     }
 
     private List<HourlyInformationEntity> parseAndReturnListOfHourlyEntities(ResponseBody responseBody) throws JsonSyntaxException, IOException {
