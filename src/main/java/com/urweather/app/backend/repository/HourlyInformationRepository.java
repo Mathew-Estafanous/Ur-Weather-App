@@ -1,10 +1,34 @@
 package com.urweather.app.backend.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface HourlyInformationRepository extends JpaRepository<HourlyInformationEntity, Long> {
+@Repository
+public class HourlyInformationRepository {
 
+    private List<HourlyInformationEntity> repositoryOfHours = new ArrayList<>();
+
+    public void saveAll(List<HourlyInformationEntity> entitiesToSave) {
+        entitiesToSave.forEach(entity -> repositoryOfHours.add(entity));
+    }
+
+    public void deleteAll() {
+        repositoryOfHours.clear();
+    }
+
+    public List<HourlyInformationEntity> findAll() {
+        return repositoryOfHours;
+    }
+
+    public HourlyInformationEntity findAll(int index) {
+        return repositoryOfHours.get(index);
+    }
+
+    public int count() {
+        return repositoryOfHours.size();
+    }
 }
