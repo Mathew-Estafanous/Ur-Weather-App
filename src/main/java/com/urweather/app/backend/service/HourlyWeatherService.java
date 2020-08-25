@@ -39,7 +39,7 @@ public class HourlyWeatherService {
         this.hourlyInformationRepo = hourlyInformationRep;
     }
 
-    public void createHourlyWeatherInformation(GeoLocationObject geoLocation) throws NullPointerException, IOException {
+    public void createHourlyWeatherInformation(GeoLocationObject geoLocation) throws JsonSyntaxException, NullPointerException, IOException {
         if(geoLocation == null) { throw new NullPointerException("Geo location is null!"); }
 
         OkHttpClient client = new OkHttpClient();
