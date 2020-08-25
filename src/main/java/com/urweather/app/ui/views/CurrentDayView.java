@@ -1,10 +1,8 @@
 package com.urweather.app.ui.views;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.entity.NowcastObject;
 import com.urweather.app.backend.service.GeoLocationService;
@@ -51,12 +49,7 @@ public class CurrentDayView extends VerticalLayout {
 
     public void updateDayViewInformation() {
         GeoLocationObject geoLocation = geoLocationService.getCurrentGeoLocation();
-        NowcastObject nowcastInformation;
-        try {
-            nowcastInformation = nowcastWeatherService.getNowcastObjectFromGeoLocation(geoLocation);
-        } catch (JsonSyntaxException | IOException e) {
-            return;
-        }
+        NowcastObject nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
 
         cityLocation.setText(geoLocation.getCity());
 

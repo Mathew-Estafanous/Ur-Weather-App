@@ -24,7 +24,9 @@ public class NowcastWeatherService {
     private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
     private final String API_URL = "api.climacell.co";
 
-    public NowcastObject getNowcastObjectFromGeoLocation(GeoLocationObject geoLocationObject) throws IOException, JsonSyntaxException {
+    private static NowcastObject currentNowcastInformation;
+
+    public void createNowcastObjectFromGeoLocation(GeoLocationObject geoLocationObject) throws JsonSyntaxException, IOException {
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = createNowcastUrlBuilder(geoLocationObject);
@@ -34,7 +36,11 @@ public class NowcastWeatherService {
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
 
-        return parseResponseBody(responseBody);
+        currentNowcastInformation = parseResponseBody(responseBody);
+    }
+
+    public NowcastObject getCurreNowcastObject() {
+        return currentNowcastInformation;
     }
 
     private NowcastObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {

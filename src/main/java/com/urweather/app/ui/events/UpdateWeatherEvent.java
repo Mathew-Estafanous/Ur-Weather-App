@@ -3,9 +3,9 @@ package com.urweather.app.ui.events;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 
-public class UpdateHourlyWeatherEvent extends ComponentEvent<Component> {
+public class UpdateWeatherEvent extends ComponentEvent<Component> {
 
-    public UpdateHourlyWeatherEvent(Component source) {
+    public UpdateWeatherEvent(Component source) {
         super(source, false);
     }
     
