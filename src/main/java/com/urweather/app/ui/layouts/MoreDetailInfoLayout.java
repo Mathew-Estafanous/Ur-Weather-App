@@ -78,7 +78,7 @@ public class MoreDetailInfoLayout extends VerticalLayout {
     }
 
     private void addListenerForEachView() {
-        searchBar.addHourlyWeatherUpdatedListener(e -> {
+        searchBar.addUpdateWeatherEvent(e -> {
             hourlyWeatherView.updateWeatherInformation();
             dailyWeatherView.updateWeatherInformation();
         });

@@ -24,6 +24,8 @@ public class GeoLocationService {
     private final String API_KEY = "be30b7151fmsh5d10acd0004f7d9p10b38cjsn7da69bed5f1a";
     private final String API_URL = "wft-geo-db.p.rapidapi.com";
 
+    private static GeoLocationObject currentGeoLocation;
+
     public final GeoLocationObject getGeoLocationObjFromString(String userInput) throws JsonSyntaxException, InputMismatchException,
                                                                             IOException, IndexOutOfBoundsException {
 
@@ -41,7 +43,12 @@ public class GeoLocationService {
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
 
-        return parseResponseBody(responseBody);
+        currentGeoLocation = parseResponseBody(responseBody);
+        return currentGeoLocation;
+    }
+
+    public GeoLocationObject getCurrentGeoLocation() {
+        return currentGeoLocation;
     }
 
     private GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException, IndexOutOfBoundsException {

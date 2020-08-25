@@ -5,6 +5,7 @@ public class GeoLocationObject {
     private String name;
     private String country;
     private String countryCode;
+    private String city;
 
     private double latitude;
     private double longitude;
@@ -47,5 +48,13 @@ public class GeoLocationObject {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

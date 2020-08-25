@@ -1,10 +1,14 @@
 package com.urweather.app.ui.views;
 
+import java.io.IOException;
+
+import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.HourlyWeatherService;
-import com.urweather.app.ui.events.UpdateHourlyWeatherEvent;
+import com.urweather.app.backend.service.NowcastWeatherService;
+import com.urweather.app.ui.events.UpdateWeatherEvent;
 import com.urweather.app.ui.events.UpdateTodayWeatherEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -28,18 +32,19 @@ public class NavigationView extends Header {
     private GeoLocationService geoLocationService;
     private DailyWeatherService dailyWeatherService;
     private HourlyWeatherService hourlyWeatherService;
+    private NowcastWeatherService nowcastWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
     Div searchBlock = new Div();
 
     @Autowired
-    public NavigationView(GeoLocationService geoLocationService,
-                            DailyWeatherService dailyWeatherService,
-                            HourlyWeatherService hourlyWeatherService) {
+    public NavigationView(GeoLocationService geoLocationService, DailyWeatherService dailyWeatherService,
+            HourlyWeatherService hourlyWeatherService, NowcastWeatherService nowcastWeatherService) {
         this.geoLocationService = geoLocationService;
         this.dailyWeatherService = dailyWeatherService;
         this.hourlyWeatherService = hourlyWeatherService;
+        this.nowcastWeatherService = nowcastWeatherService;
         addClassName("navigation-bar");
 
         searchButton.addClassName("searchButton");
@@ -59,18 +64,29 @@ public class NavigationView extends Header {
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
             GeoLocationObject geoLocation = callGeoLocationService(searchField.getValue());
-            if(geoLocation != null) {
+            if (geoLocation != null) {
                 boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
                 boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
+                boolean didNowcastServiceWork = callNowcastWeatherService(geoLocation);
 
-                if(didDailyServiceWork) {
+                if (didNowcastServiceWork) {
                     fireEvent(new UpdateTodayWeatherEvent(this));
                 }
-                if(didHourlyServiceWork) {
-                    fireEvent(new UpdateHourlyWeatherEvent(this));
+                if (didHourlyServiceWork && didDailyServiceWork) {
+                    fireEvent(new UpdateWeatherEvent(this));
                 }
             }
         });
+    }
+
+    private boolean callNowcastWeatherService(GeoLocationObject geoLocation) {
+        try {
+            nowcastWeatherService.createNowcastObjectFromGeoLocation(geoLocation);
+            return true;
+        } catch (JsonSyntaxException | IOException e) {
+            Notification.show(e.getMessage());
+            return false;
+        }
     }
 
     private boolean callHourlyWeatherService(GeoLocationObject geoLocation) {
@@ -107,7 +123,7 @@ public class NavigationView extends Header {
         return addListener(UpdateTodayWeatherEvent.class, listener);
     }
 
-    public Registration addHourlyWeatherUpdatedListener(ComponentEventListener<UpdateHourlyWeatherEvent> listener) {
-        return addListener(UpdateHourlyWeatherEvent.class , listener);
+    public Registration addUpdateWeatherEvent(ComponentEventListener<UpdateWeatherEvent> listener) {
+        return addListener(UpdateWeatherEvent.class , listener);
     }
 }
