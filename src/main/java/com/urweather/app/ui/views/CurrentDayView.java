@@ -1,14 +1,16 @@
 package com.urweather.app.ui.views;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
-import com.urweather.app.backend.entity.DayInformationEntity;
-import com.urweather.app.backend.service.DailyWeatherService;
-import com.urweather.app.backend.service.HourlyWeatherService;
+import com.google.gson.JsonSyntaxException;
+import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.NowcastObject;
+import com.urweather.app.backend.service.GeoLocationService;
+import com.urweather.app.backend.service.NowcastWeatherService;
 import com.urweather.app.helpers.ImageIconHelper;
+import com.urweather.app.helpers.TimezoneConvertorHelper;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -25,18 +27,17 @@ import org.springframework.stereotype.Component;
 public class CurrentDayView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
 
-    private DailyWeatherService dailyWeatherService;
-    private HourlyWeatherService hourlyWeatherService;
+    private NowcastWeatherService nowcastWeatherService;
+    private GeoLocationService geoLocationService;
 
     H1 cityLocation = new H1("Richmond Hill");
     H2 currentDate = new H2("August 13, 2020");
     Image weatherIcon = new Image("frontend/weather_icons/PNG/512/day_partial_cloud.png", "Image Not Found");
 
     @Autowired
-    public CurrentDayView(DailyWeatherService dailyWeatherService,
-                            HourlyWeatherService hourlyWeatherService) {
-        this.dailyWeatherService = dailyWeatherService;
-        this.hourlyWeatherService = hourlyWeatherService;
+    public CurrentDayView(NowcastWeatherService nowcastWeatherService, GeoLocationService geoLocationService) {
+        this.nowcastWeatherService = nowcastWeatherService;
+        this.geoLocationService = geoLocationService;
 
         addClassName("current-day-view");
 
@@ -49,17 +50,20 @@ public class CurrentDayView extends VerticalLayout {
     }
 
     public void updateDayViewInformation() {
-        DayInformationEntity dayInformation = dailyWeatherService.getFirstDayWeatherEntity();
+        GeoLocationObject geoLocation = geoLocationService.getCurrentGeoLocation();
+        NowcastObject nowcastInformation;
+        try {
+            nowcastInformation = nowcastWeatherService.getNowcastObjectFromGeoLocation(geoLocation);
+        } catch (JsonSyntaxException | IOException e) {
+            return;
+        }
 
-        cityLocation.setText(dayInformation.getCityName());
+        cityLocation.setText(geoLocation.getCity());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        Locale locale = new Locale("en", dayInformation.getCityName());
-        SimpleDateFormat formatter = new SimpleDateFormat("MMMMM dd, yyyy", locale);
-        currentDate.setText(formatter.format(calendar.getTime()));
-        weatherIcon.setSrc(ImageIconHelper.getPathOfIconFromWeatherCode(hourlyWeatherService
-                                                                    .getFirstHourInformation()
-                                                                    .getWeatherCode()));
+        ZonedDateTime convertedZonedTime = TimezoneConvertorHelper.convertDateToLocalTimezone(nowcastInformation.getLatitude(),
+                                                            nowcastInformation.getLongitude(), nowcastInformation.getCurrentDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        currentDate.setText(convertedZonedTime.format(formatter));
+        weatherIcon.setSrc(ImageIconHelper.getPathOfIconFromWeatherCode(nowcastInformation.getWeatherCode()));
     }
 }
