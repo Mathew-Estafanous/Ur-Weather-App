@@ -2,6 +2,8 @@ package com.urweather.app.ui.views;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
+
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.DailyWeatherService;
@@ -52,13 +54,18 @@ public class NavigationView extends Header {
         searchBlock.add(searchButton);
 
         searchBlock.addClassName("searchBlock");
-        searchField.setPlaceholder("Richmond Hill, CA");
+        searchField.setValue("Richmond Hill, CA");
         searchField.setWidth("15em");
         searchField.addClassName("searchField");
         searchBlock.add(searchField);
 
         addButtonEvent();
         add(searchBlock);
+    }
+
+    @PostConstruct
+    public void testExample() {
+        searchButton.click();
     }
 
     private void addButtonEvent() {
