@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 @Entity
 public class DayInformationEntity extends AbstractEntity {
     private static final long serialVersionUID = 1L;
-    
+
     private double min;
     private double max;
 
