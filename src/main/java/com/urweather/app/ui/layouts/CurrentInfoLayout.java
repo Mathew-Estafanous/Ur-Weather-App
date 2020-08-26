@@ -32,6 +32,7 @@ public class CurrentInfoLayout extends HorizontalLayout {
 
         addListenerForViews();
         add(currentDayView, currentTemperatureView);
+        startUpUIWithBaseCity();
     }
 
     private void addListenerForViews() {
@@ -39,5 +40,10 @@ public class CurrentInfoLayout extends HorizontalLayout {
             currentDayView.updateDayViewInformation();
             currentTemperatureView.updateDayTemperatureView();
         });
+    }
+
+    private void startUpUIWithBaseCity() {
+        currentDayView.updateDayViewInformation();
+        currentTemperatureView.updateDayTemperatureView();
     }
 }

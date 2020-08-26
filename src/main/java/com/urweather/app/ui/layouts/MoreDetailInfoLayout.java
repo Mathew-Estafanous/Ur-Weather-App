@@ -58,10 +58,8 @@ public class MoreDetailInfoLayout extends VerticalLayout {
         createTabChangeFunctionality();
         addListenerForEachView();
 
-        fillHourlyViewWithFakeData();
-        fillDailyViewWithFakeData();
-
         add(listOfTabs, listOfViews);
+        startUpUIWithBaseCity();
     }
 
     private void createTabChangeFunctionality() {
@@ -77,28 +75,15 @@ public class MoreDetailInfoLayout extends VerticalLayout {
         });
     }
 
+    private void startUpUIWithBaseCity() {
+        hourlyWeatherView.updateWeatherInformation();
+        dailyWeatherView.updateWeatherInformation();
+    }
+
     private void addListenerForEachView() {
         searchBar.addUpdateWeatherEvent(e -> {
             hourlyWeatherView.updateWeatherInformation();
             dailyWeatherView.updateWeatherInformation();
         });
-    }
-
-    private void fillHourlyViewWithFakeData() {
-        hourlyWeatherView.addWeatherSnippet("NOW", "frontend/weather_icons/PNG/256/day_clear.png", "28°");
-        hourlyWeatherView.addWeatherSnippet("1 PM", "frontend/weather_icons/PNG/256/day_clear.png", "29°");
-        hourlyWeatherView.addWeatherSnippet("3 PM", "frontend/weather_icons/PNG/256/day_clear.png", "29°");
-        hourlyWeatherView.addWeatherSnippet("4 PM", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "29°");
-        hourlyWeatherView.addWeatherSnippet("5 PM", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "28°");
-        hourlyWeatherView.addWeatherSnippet("6 PM", "frontend/weather_icons/PNG/256/rain.png", "27°");
-    }
-
-    private void fillDailyViewWithFakeData() {
-        dailyWeatherView.addWeatherSnippet("FRIDAY", "frontend/weather_icons/PNG/256/day_clear.png", "29°/18°");
-        dailyWeatherView.addWeatherSnippet("SATURDAY", "frontend/weather_icons/PNG/256/day_partial_cloud.png", "27°/19°");
-        dailyWeatherView.addWeatherSnippet("SUNDAY", "frontend/weather_icons/PNG/256/rain.png", "24°/17°");
-        dailyWeatherView.addWeatherSnippet("MONDAY", "frontend/weather_icons/PNG/256/thunder.png", "26°/14°");
-        dailyWeatherView.addWeatherSnippet("TUESDAY", "frontend/weather_icons/PNG/256/day_clear.png", "23°/13°");
-        dailyWeatherView.addWeatherSnippet("WEDNESDAY", "frontend/weather_icons/PNG/256/day_clear.png", "24°/14°");
     }
 }
