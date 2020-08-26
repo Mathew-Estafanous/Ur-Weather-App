@@ -1,12 +1,10 @@
 package com.urweather.app.backend.service;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.googlecode.gentyref.TypeToken;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.entity.NowcastObject;
 
