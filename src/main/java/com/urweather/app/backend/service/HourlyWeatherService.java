@@ -88,6 +88,8 @@ public class HourlyWeatherService {
         hourInformatioObject.add("current_temp", hourJsonObject.get("temp").getAsJsonObject().get("value"));
         hourInformatioObject.add("weather_code", hourJsonObject.get("weather_code").getAsJsonObject().get("value"));
         hourInformatioObject.add("time", hourJsonObject.get("observation_time").getAsJsonObject().get("value"));
+        hourInformatioObject.add("sunset", hourJsonObject.get("sunset").getAsJsonObject().get("value"));
+        hourInformatioObject.add("sunrise", hourJsonObject.get("sunrise").getAsJsonObject().get("value"));
 
         return hourGson.fromJson(hourInformatioObject.toString(), HourlyInformationEntity.class);
     }
@@ -104,7 +106,7 @@ public class HourlyWeatherService {
             .addQueryParameter("unit_system", "si")
             .addQueryParameter("start_time", "now")
             .addQueryParameter("end_time", formatter.format(futureEndTime))
-            .addQueryParameter("fields", "temp,weather_code")
+            .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
             .addQueryParameter("apikey", API_KEY);
     }
 }
