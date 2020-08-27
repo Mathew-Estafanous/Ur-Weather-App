@@ -22,6 +22,10 @@ public class HourlyInformationEntity extends AbstractEntity {
 
     @SerializedName("time")
     private Date hourTime;
+    @SerializedName("sunrise")
+    private Date sunrise;
+    @SerializedName("sunset")
+    private Date sunset;
 
     public double getLatitude() {
         return latitude;
@@ -61,5 +65,21 @@ public class HourlyInformationEntity extends AbstractEntity {
 
     public void setHourTime(Date hourTime) {
         this.hourTime = hourTime;
+    }
+
+    public Date getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(Date sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    public Date getSunset() {
+        return sunset;
+    }
+
+    public void setSunset(Date sunset) {
+        this.sunset = sunset;
     }
 }

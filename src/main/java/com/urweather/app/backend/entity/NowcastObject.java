@@ -16,6 +16,10 @@ public class NowcastObject {
     private String weatherCode;
     @SerializedName("observation_time")
     private Date currentDate;
+    @SerializedName("sunset")
+    private Date sunset;
+    @SerializedName("sunrise")
+    private Date sunrise;
 
     public double getLatitude() {
         return latitude;
@@ -55,5 +59,21 @@ public class NowcastObject {
 
     public void setCurrentDate(Date currentDate) {
         this.currentDate = currentDate;
+    }
+
+    public Date getSunset() {
+        return sunset;
+    }
+
+    public void setSunset(Date sunset) {
+        this.sunset = sunset;
+    }
+
+    public Date getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(Date sunrise) {
+        this.sunrise = sunrise;
     }
 }

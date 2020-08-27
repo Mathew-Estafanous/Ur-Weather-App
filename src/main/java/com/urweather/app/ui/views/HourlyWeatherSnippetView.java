@@ -35,12 +35,19 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
         deleteAllCurrentSnippets();
 
         listOfHourlyInformation.forEach(hour -> {
-            ZonedDateTime convertedToTimezone = TimezoneConvertorHelper.convertDateToLocalTimezone(hour.getLatitude(),
-                                        hour.getLongitude(), hour.getHourTime());
+            double hourLat = hour.getLatitude();
+            double hourLong = hour.getLongitude();
+            ZonedDateTime convertedCurrentTime = TimezoneConvertorHelper.convertDateToLocalTimezone(hourLat,
+                                    hourLong, hour.getHourTime());
+            ZonedDateTime convertedSunriseTime = TimezoneConvertorHelper.convertDateToLocalTimezone(hourLat,
+                                    hourLong, hour.getSunrise());
+            ZonedDateTime convertedSunsetTime = TimezoneConvertorHelper.convertDateToLocalTimezone(hourLat,
+                                    hourLong, hour.getSunset());
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("hh a");
-            String time =  convertedToTimezone.format(dateFormat).toUpperCase();
+            String time =  convertedCurrentTime.format(dateFormat).toUpperCase();
             String temp = Math.round(hour.getCurrentTemp()) + DEGREE_SYMBOL;
-            String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCode(hour.getWeatherCode());
+            String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCodeAndTime(hour.getWeatherCode(),
+                                convertedCurrentTime, convertedSunriseTime, convertedSunsetTime);
             addWeatherSnippet(time, imageSrc, temp);
         });
     }

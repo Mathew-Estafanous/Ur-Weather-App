@@ -50,6 +50,8 @@ public class NowcastWeatherService {
         nowcastJsonObject.add("temp", responseJsonObject.get("temp").getAsJsonObject().get("value"));
         nowcastJsonObject.add("weather_code", responseJsonObject.get("weather_code").getAsJsonObject().get("value"));
         nowcastJsonObject.add("observation_time", responseJsonObject.get("observation_time").getAsJsonObject().get("value"));
+        nowcastJsonObject.add("sunrise", responseJsonObject.get("sunrise").getAsJsonObject().get("value"));
+        nowcastJsonObject.add("sunset", responseJsonObject.get("sunset").getAsJsonObject().get("value"));
         return gson.fromJson(nowcastJsonObject.toString(), NowcastObject.class);
     }
 
@@ -59,7 +61,7 @@ public class NowcastWeatherService {
                 .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
                 .addQueryParameter("unit_system", "si")
-                .addQueryParameter("fields", "temp,weather_code")
+                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
                 .addQueryParameter("apikey", API_KEY);
     }
 }
