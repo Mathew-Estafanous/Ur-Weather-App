@@ -53,10 +53,17 @@ public class CurrentDayView extends VerticalLayout {
 
         cityLocation.setText(geoLocation.getCity());
 
-        ZonedDateTime convertedZonedTime = TimezoneConvertorHelper.convertDateToLocalTimezone(nowcastInformation.getLatitude(),
-                                                            nowcastInformation.getLongitude(), nowcastInformation.getCurrentDate());
+        double latitude = nowcastInformation.getLatitude();
+        double longitude = nowcastInformation.getLongitude();
+        ZonedDateTime convertedZonedTime = TimezoneConvertorHelper.convertDateToLocalTimezone(latitude,
+                                                longitude, nowcastInformation.getCurrentDate());
+        ZonedDateTime convertedSunriseTime = TimezoneConvertorHelper.convertDateToLocalTimezone(latitude,
+                                                longitude, nowcastInformation.getSunrise());
+        ZonedDateTime convertedSunsetTime = TimezoneConvertorHelper.convertDateToLocalTimezone(latitude,
+                                                longitude, nowcastInformation.getSunset());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
         currentDate.setText(convertedZonedTime.format(formatter));
-        weatherIcon.setSrc(ImageIconHelper.getPathOfIconFromWeatherCode(nowcastInformation.getWeatherCode()));
+        weatherIcon.setSrc(ImageIconHelper.getPathOfIconFromWeatherCodeAndTime(nowcastInformation.getWeatherCode(),
+                                convertedZonedTime, convertedSunriseTime, convertedSunsetTime));
     }
 }
