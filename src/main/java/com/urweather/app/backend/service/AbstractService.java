@@ -11,7 +11,7 @@ public abstract class AbstractService<T, E, G> {
 
     abstract public void callService(T type) throws JsonSyntaxException, IOException, NullPointerException;
 
-    abstract E parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException;
+    abstract protected E parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException;
 
-    abstract HttpUrl.Builder createUrlBuilder(G object);
+    abstract protected HttpUrl.Builder createUrlBuilder(G object);
 }

@@ -60,7 +60,7 @@ public class HourlyWeatherService
     }
 
     @Override
-    List<HourlyInformationEntity> parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    protected List<HourlyInformationEntity> parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {
         }.getType();
@@ -83,7 +83,7 @@ public class HourlyWeatherService
                 .addQueryParameter("end_time", formatter.format(futureEndTime))
                 .addQueryParameter("fields", "temp,weather_code,sunrise,sunset").addQueryParameter("apikey", API_KEY);
     }
-    
+
     public HourlyInformationEntity getFirstHourInformation() {
         return hourlyInformationRepo.findAll(0);
     }
