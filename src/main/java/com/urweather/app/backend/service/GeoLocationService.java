@@ -19,16 +19,15 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
-public class GeoLocationService {
+public class GeoLocationService extends AbstractService<String, GeoLocationObject, String[]>{
 
     private final String API_KEY = "be30b7151fmsh5d10acd0004f7d9p10b38cjsn7da69bed5f1a";
     private final String API_URL = "wft-geo-db.p.rapidapi.com";
 
     private static GeoLocationObject currentGeoLocation;
 
-    public final GeoLocationObject getGeoLocationObjFromString(String userInput) throws JsonSyntaxException, InputMismatchException,
-                                                                            IOException, IndexOutOfBoundsException {
-
+    @Override
+    public final void callService(String userInput) throws JsonSyntaxException, IOException, NullPointerException {
         String[] splitUserInput = parseAndReturnCityAndCountry(userInput);
         OkHttpClient client = new OkHttpClient();
 
@@ -44,14 +43,10 @@ public class GeoLocationService {
         ResponseBody responseBody = response.body();
 
         currentGeoLocation = parseResponseBody(responseBody);
-        return currentGeoLocation;
     }
 
-    public GeoLocationObject getCurrentGeoLocation() {
-        return currentGeoLocation;
-    }
-
-    private GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException, IndexOutOfBoundsException {
+    @Override
+    protected GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         Type jsonType = new TypeToken<JsonObject>() {}.getType();
         JsonObject jsonObj = gson.fromJson(responseBody.string(), jsonType);
@@ -64,11 +59,16 @@ public class GeoLocationService {
         }
     }
 
-    private HttpUrl.Builder createUrlBuilder(String[] splitUserInput) {
+    @Override
+    protected HttpUrl.Builder createUrlBuilder(String[] splitUserInput) {
         return new HttpUrl.Builder().scheme("https").host(API_URL)
                 .addPathSegment("v1").addPathSegment("geo").addPathSegment("cities")
                 .addQueryParameter("namePrefix", splitUserInput[0])
                 .addQueryParameter("countryIds", splitUserInput[1].replaceAll("\\s+", ""));
+    }
+
+    public GeoLocationObject getCurrentGeoLocation() {
+        return currentGeoLocation;
     }
 
     private String[] parseAndReturnCityAndCountry(String userInput) throws InputMismatchException {

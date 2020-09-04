@@ -1,11 +1,11 @@
 package com.urweather.app.ui.views;
 
 import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.service.AbstractService;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.HourlyWeatherService;
@@ -72,9 +72,9 @@ public class NavigationView extends Header {
         searchButton.addClickListener(event -> {
             GeoLocationObject geoLocation = callGeoLocationService(searchField.getValue());
             if (geoLocation != null) {
-                boolean didDailyServiceWork = callDailyWeatherService(geoLocation);
-                boolean didHourlyServiceWork = callHourlyWeatherService(geoLocation);
-                boolean didNowcastServiceWork = callNowcastWeatherService(geoLocation);
+                boolean didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
+                boolean didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
+                boolean didNowcastServiceWork = callWeatherService(nowcastWeatherService, geoLocation);
 
                 if (didNowcastServiceWork) {
                     fireEvent(new UpdateTodayWeatherEvent(this));
@@ -86,39 +86,21 @@ public class NavigationView extends Header {
         });
     }
 
-    private boolean callNowcastWeatherService(GeoLocationObject geoLocation) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private boolean callWeatherService(AbstractService service, GeoLocationObject geoLocation) {
         try {
-            nowcastWeatherService.createNowcastObjectFromGeoLocation(geoLocation);
+            service.callService(geoLocation);
             return true;
-        } catch (JsonSyntaxException | IOException e) {
+		} catch (JsonSyntaxException | NullPointerException | IOException e) {
             Notification.show(e.getMessage());
             return false;
-        }
-    }
-
-    private boolean callHourlyWeatherService(GeoLocationObject geoLocation) {
-        try {
-            hourlyWeatherService.createHourlyWeatherInformation(geoLocation);
-            return true;
-        } catch (Exception e) {
-            Notification.show(e.getMessage());
-            return false;
-        }
-    }
-
-    private boolean callDailyWeatherService(GeoLocationObject geoLocation) {
-        try {
-            dailyWeatherService.createDailyWeatherInformation(geoLocation);
-            return true;
-        } catch (Exception e) {
-            Notification.show(e.getMessage());
-            return false;
-        }
+		}
     }
 
     private GeoLocationObject callGeoLocationService(String location) {
         try {
-            GeoLocationObject geoLocation = geoLocationService.getGeoLocationObjFromString(location);
+            geoLocationService.callService(location);
+            GeoLocationObject geoLocation = geoLocationService.getCurrentGeoLocation();
             return geoLocation;
         } catch (Exception e) {
             Notification.show(e.toString());
