@@ -25,7 +25,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
-public class DailyWeatherService {
+public class DailyWeatherService extends AbstractService<GeoLocationObject, List<DayInformationEntity>, GeoLocationObject> {
 
     private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
@@ -36,9 +36,11 @@ public class DailyWeatherService {
         this.dayInformationRepo = dayInformationRepo;
     }
 
-
-    public final void createDailyWeatherInformation(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
-        if(geoLocation == null) { throw new NullPointerException("Geo location is null!"); }
+    @Override
+    public final void callService(GeoLocationObject geoLocation) throws IOException {
+        if (geoLocation == null) {
+            throw new NullPointerException("Geo location is null!");
+        }
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
@@ -48,13 +50,32 @@ public class DailyWeatherService {
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
 
-        List<DayInformationEntity> listOfDayEntities = parseBodyAndReturnDayInformationEntity(responseBody, geoLocation);
+        List<DayInformationEntity> listOfDayEntities = parseResponseBody(responseBody);
         addDailyWeatherEntityToRepository(listOfDayEntities);
     }
 
+    @Override
+    protected List<DayInformationEntity> parseResponseBody(ResponseBody responseBody)
+            throws JsonSyntaxException, IOException {
+        Gson gson = new Gson();
+        Type userType = new TypeToken<ArrayList<JsonObject>>() {
+        }.getType();
+        List<JsonObject> unParsedDayJsonList = gson.fromJson(responseBody.string(), userType);
+        return unParsedDayJsonList.stream().map(day -> createDayInormationEntity(day)).collect(Collectors.toList());
+    }
+
+    @Override
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
+                .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")
+                .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter("unit_system", "si").addQueryParameter("start_time", "now")
+                .addQueryParameter("fields", "temp,weather_code").addQueryParameter("apikey", API_KEY);
+    }
+
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
-        return dayInformationRepo.findAll().stream().limit(total)
-                .collect(Collectors.toList());
+        return dayInformationRepo.findAll().stream().limit(total).collect(Collectors.toList());
     }
 
     public DayInformationEntity getFirstDayWeatherEntity() {
@@ -62,49 +83,24 @@ public class DailyWeatherService {
     }
 
     private void addDailyWeatherEntityToRepository(List<DayInformationEntity> listOfDays) {
-        if(dayInformationRepo.count() != 0) {
+        if (dayInformationRepo.count() != 0) {
             dayInformationRepo.deleteAll();
         }
         dayInformationRepo.saveAll(listOfDays);
     }
 
-    private List<DayInformationEntity> parseBodyAndReturnDayInformationEntity(ResponseBody responseBody,
-                                                    GeoLocationObject geoLocation) throws JsonSyntaxException, IOException {
-        Gson gson = new Gson();
-        Type userType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
-        List<JsonObject> unParsedDayJsonList = gson.fromJson(responseBody.string(), userType);
-        return unParsedDayJsonList.stream()
-                .map(day -> createDayInormationEntity(day, geoLocation))
-                .collect(Collectors.toList());
-    }
-
-    private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject, GeoLocationObject geoLocationObject) {
+    private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject) {
         JsonObject dayInformationJson = new JsonObject();
         Gson gson = new Gson();
         dayInformationJson.add("lat", dayJsonObject.get("lat"));
         dayInformationJson.add("lon", dayJsonObject.get("lon"));
-        dayInformationJson.add("observation_time", dayJsonObject.get("observation_time")
-                                            .getAsJsonObject().get("value"));
-        dayInformationJson.add("weather_code", dayJsonObject.get("weather_code")
-                                            .getAsJsonObject().get("value"));
+        dayInformationJson.add("observation_time",
+                dayJsonObject.get("observation_time").getAsJsonObject().get("value"));
+        dayInformationJson.add("weather_code", dayJsonObject.get("weather_code").getAsJsonObject().get("value"));
         JsonArray tempJsonArray = dayJsonObject.get("temp").getAsJsonArray();
-        dayInformationJson.add("min", tempJsonArray.get(0).getAsJsonObject()
-                                        .get("min").getAsJsonObject().get("value"));
-        dayInformationJson.add("max", tempJsonArray.get(1).getAsJsonObject()
-                                        .get("max").getAsJsonObject().get("value"));
-        dayInformationJson.addProperty("city_name", geoLocationObject.getName());
-        dayInformationJson.addProperty("country_code", geoLocationObject.getCountryCode());
+        dayInformationJson.add("min", tempJsonArray.get(0).getAsJsonObject().get("min").getAsJsonObject().get("value"));
+        dayInformationJson.add("max", tempJsonArray.get(1).getAsJsonObject().get("max").getAsJsonObject().get("value"));
 
         return gson.fromJson(dayInformationJson.toString(), DayInformationEntity.class);
-    }
-
-    private HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
-            .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")
-            .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-            .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-            .addQueryParameter("unit_system", "si").addQueryParameter("start_time", "now")
-            .addQueryParameter("fields", "temp,weather_code")
-            .addQueryParameter("apikey", API_KEY);
     }
 }

@@ -31,7 +31,8 @@ public class GeoLocationServiceTest {
 
         GeoLocationObject receviedObject = new GeoLocationObject();
         try {
-            receviedObject = geoLocationService.getGeoLocationObjFromString("Richmond Hill, CA");
+            geoLocationService.callService("Richmond Hill, CA");
+            receviedObject = geoLocationService.getCurrentGeoLocation();
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
             Assert.fail(e.getMessage());
         }

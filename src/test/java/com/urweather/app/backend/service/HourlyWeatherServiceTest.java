@@ -32,16 +32,17 @@ public class HourlyWeatherServiceTest {
 
     @Test(expected = Exception.class)
     public void failedWhenGivenNullObjects() throws Exception {
-        hourlyWeatherService.createHourlyWeatherInformation(null);
-        hourlyWeatherService.createHourlyWeatherInformation(new GeoLocationObject());
+        hourlyWeatherService.callService(null);
+        hourlyWeatherService.callService(new GeoLocationObject());
     }
 
     @Before
     public void createGeoLocationAndCallHourlyService() {
         GeoLocationObject geoLocationObj = new GeoLocationObject();
         try {
-            geoLocationObj = geoLocationService.getGeoLocationObjFromString("Richmond Hill, CA");
-            hourlyWeatherService.createHourlyWeatherInformation(geoLocationObj);
+            geoLocationService.callService("Richmond Hill, CA");
+            geoLocationObj = geoLocationService.getCurrentGeoLocation();
+            hourlyWeatherService.callService(geoLocationObj);
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
             Assert.fail(e.getMessage());
         }

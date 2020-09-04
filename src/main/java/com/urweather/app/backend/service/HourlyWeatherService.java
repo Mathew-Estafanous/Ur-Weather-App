@@ -28,7 +28,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
-public class HourlyWeatherService {
+public class HourlyWeatherService
+        extends AbstractService<GeoLocationObject, List<HourlyInformationEntity>, GeoLocationObject> {
 
     private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
@@ -39,8 +40,11 @@ public class HourlyWeatherService {
         this.hourlyInformationRepo = hourlyInformationRep;
     }
 
-    public void createHourlyWeatherInformation(GeoLocationObject geoLocation) throws JsonSyntaxException, NullPointerException, IOException {
-        if(geoLocation == null) { throw new NullPointerException("Geo location is null!"); }
+    @Override
+    public void callService(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
+        if (geoLocation == null) {
+            throw new NullPointerException("Geo location is null!");
+        }
 
         OkHttpClient client = new OkHttpClient();
 
@@ -51,10 +55,35 @@ public class HourlyWeatherService {
         Response response = client.newCall(request).execute();
         ResponseBody responseBody = response.body();
 
-        List<HourlyInformationEntity> listOfHourlyEntities = parseAndReturnListOfHourlyEntities(responseBody);
+        List<HourlyInformationEntity> listOfHourlyEntities = parseResponseBody(responseBody);
         addHourlyInformationToRepository(listOfHourlyEntities);
     }
 
+    @Override
+    List<HourlyInformationEntity> parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+        Gson gson = new Gson();
+        Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {
+        }.getType();
+        List<JsonObject> unParsedHourlyJsonObjects = gson.fromJson(responseBody.string(), hourlyType);
+        return unParsedHourlyJsonObjects.stream().map(hour -> createHourlyInformationEntity(hour))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+        Date futureEndTime = DateUtils.addHours(new Date(), 5);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
+                .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
+                .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter("unit_system", "si").addQueryParameter("start_time", "now")
+                .addQueryParameter("end_time", formatter.format(futureEndTime))
+                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset").addQueryParameter("apikey", API_KEY);
+    }
+    
     public HourlyInformationEntity getFirstHourInformation() {
         return hourlyInformationRepo.findAll(0);
     }
@@ -64,20 +93,10 @@ public class HourlyWeatherService {
     }
 
     private void addHourlyInformationToRepository(List<HourlyInformationEntity> listOfHourEntities) {
-        if(hourlyInformationRepo.count() != 0) {
+        if (hourlyInformationRepo.count() != 0) {
             hourlyInformationRepo.deleteAll();
         }
         hourlyInformationRepo.saveAll(listOfHourEntities);
-    }
-
-    private List<HourlyInformationEntity> parseAndReturnListOfHourlyEntities(ResponseBody responseBody) throws JsonSyntaxException, IOException {
-        Gson gson = new Gson();
-        Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
-        List<JsonObject> unParsedHourlyJsonObjects = gson.fromJson(responseBody.string(), hourlyType);
-        return unParsedHourlyJsonObjects.stream()
-                .map(hour -> createHourlyInformationEntity(hour))
-                .collect(Collectors.toList());
-
     }
 
     private HourlyInformationEntity createHourlyInformationEntity(JsonObject hourJsonObject) {
@@ -92,21 +111,5 @@ public class HourlyWeatherService {
         hourInformatioObject.add("sunrise", hourJsonObject.get("sunrise").getAsJsonObject().get("value"));
 
         return hourGson.fromJson(hourInformatioObject.toString(), HourlyInformationEntity.class);
-    }
-
-    private HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        Date futureEndTime = DateUtils.addHours(new Date(), 5);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
-            .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
-            .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-            .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-            .addQueryParameter("unit_system", "si")
-            .addQueryParameter("start_time", "now")
-            .addQueryParameter("end_time", formatter.format(futureEndTime))
-            .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
-            .addQueryParameter("apikey", API_KEY);
     }
 }
