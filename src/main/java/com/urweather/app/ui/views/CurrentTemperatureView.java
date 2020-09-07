@@ -1,10 +1,6 @@
 package com.urweather.app.ui.views;
 
-import java.io.IOException;
-
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.NowcastObject;
-import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.NowcastWeatherService;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
