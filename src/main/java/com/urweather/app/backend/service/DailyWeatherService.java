@@ -75,11 +75,9 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
-        return dayInformationRepo.findAll().stream().limit(total).collect(Collectors.toList());
-    }
-
-    public DayInformationEntity getFirstDayWeatherEntity() {
-        return dayInformationRepo.findAll(0);
+        return dayInformationRepo.findAll().stream()
+            .limit(total)
+            .collect(Collectors.toList());
     }
 
     private void addDailyWeatherEntityToRepository(List<DayInformationEntity> listOfDays) {

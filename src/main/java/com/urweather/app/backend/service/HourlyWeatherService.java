@@ -84,10 +84,6 @@ public class HourlyWeatherService
                 .addQueryParameter("fields", "temp,weather_code,sunrise,sunset").addQueryParameter("apikey", API_KEY);
     }
 
-    public HourlyInformationEntity getFirstHourInformation() {
-        return hourlyInformationRepo.findAll(0);
-    }
-
     public List<HourlyInformationEntity> getListOfHourlyInformation() {
         return hourlyInformationRepo.findAll();
     }
