@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.service.HourlyWeatherService;
+import com.urweather.app.helpers.ConstantSymbols;
 import com.urweather.app.helpers.ImageIconHelper;
 import com.urweather.app.helpers.TimezoneConvertorHelper;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Component;
 public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     private HourlyWeatherService hourlyWeatherService;
-
-    private final String DEGREE_SYMBOL = "°";
 
     @Autowired
     public HourlyWeatherSnippetView(HourlyWeatherService hourlyWeatherService) {
@@ -45,7 +44,7 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
                                     hourLong, hour.getSunset());
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("hh a");
             String time =  convertedCurrentTime.format(dateFormat).toUpperCase();
-            String temp = Math.round(hour.getCurrentTemp()) + DEGREE_SYMBOL;
+            String temp = Math.round(hour.getCurrentTemp()) + ConstantSymbols.DEGREE;
             String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCodeAndTime(hour.getWeatherCode(),
                                 convertedCurrentTime, convertedSunriseTime, convertedSunsetTime);
             addWeatherSnippet(time, imageSrc, temp);

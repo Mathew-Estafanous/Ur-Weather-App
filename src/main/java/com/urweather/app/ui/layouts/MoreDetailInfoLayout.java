@@ -24,22 +24,24 @@ public class MoreDetailInfoLayout extends VerticalLayout {
 
     private NavigationView searchBar;
 
-    Tabs listOfTabs = new Tabs();
-    Tab hourlyTab = new Tab("Hourly");
-    Tab dailyTab = new Tab("Daily");
-    Tab detailsTab = new Tab("Details");
+    private Tabs listOfTabs = new Tabs();
+    private Tab hourlyTab = new Tab("Hourly");
+    private Tab dailyTab = new Tab("Daily");
+    private Tab detailsTab = new Tab("Details");
 
-    Div listOfViews = new Div();
-    HourlyWeatherSnippetView hourlyWeatherView;
-    DailyWeatherSnippetView dailyWeatherView;
-    DetailedWeatherView detailedWeatherView = new DetailedWeatherView();
+    private Div listOfViews = new Div();
+
+    private HourlyWeatherSnippetView hourlyWeatherView;
+    private DailyWeatherSnippetView dailyWeatherView;
+    private DetailedWeatherView detailedWeatherView;
 
     @Autowired
     public MoreDetailInfoLayout(NavigationView searchBar, DailyWeatherSnippetView dailyWeatherView,
-                                    HourlyWeatherSnippetView hourlyWeatherSnippetView) {
+                    HourlyWeatherSnippetView hourlyWeatherSnippetView, DetailedWeatherView detailedWeatherView) {
         this.searchBar = searchBar;
         this.dailyWeatherView = dailyWeatherView;
         this.hourlyWeatherView = hourlyWeatherSnippetView;
+        this.detailedWeatherView = detailedWeatherView;
         addClassName("more-detail-layout");
 
         hourlyTab.addClassName("hourly-tab");
@@ -78,12 +80,12 @@ public class MoreDetailInfoLayout extends VerticalLayout {
     private void startUpUIWithBaseCity() {
         hourlyWeatherView.updateWeatherInformation();
         dailyWeatherView.updateWeatherInformation();
+        detailedWeatherView.updateDetailWeatherInformation();
     }
 
     private void addListenerForEachView() {
         searchBar.addUpdateWeatherEvent(e -> {
-            hourlyWeatherView.updateWeatherInformation();
-            dailyWeatherView.updateWeatherInformation();
+            startUpUIWithBaseCity();
         });
     }
 }

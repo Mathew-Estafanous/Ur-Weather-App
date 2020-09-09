@@ -2,6 +2,7 @@ package com.urweather.app.ui.views;
 
 import com.urweather.app.backend.entity.NowcastObject;
 import com.urweather.app.backend.service.NowcastWeatherService;
+import com.urweather.app.helpers.ConstantSymbols;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Component;
 @CssImport("./styles/current-info-styles.css")
 public class CurrentTemperatureView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
-
-    private final String DEGREE_SYMBOL = "°";
 
     private NowcastWeatherService nowcastWeatherService;
 
@@ -34,6 +33,6 @@ public class CurrentTemperatureView extends VerticalLayout {
 
     public void updateDayTemperatureView() {
         NowcastObject nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
-        currentTemp.setText(Integer.toString((int) Math.round(nowcastInformation.getTemperature())) + DEGREE_SYMBOL);
+        currentTemp.setText(Integer.toString((int) Math.round(nowcastInformation.getTemperature())) + ConstantSymbols.DEGREE);
     }
 }
