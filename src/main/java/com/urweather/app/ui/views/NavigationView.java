@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.service.AbstractService;
 import com.urweather.app.backend.service.DailyWeatherService;
+import com.urweather.app.backend.service.DetailWeatherService;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.HourlyWeatherService;
 import com.urweather.app.backend.service.NowcastWeatherService;
@@ -35,6 +36,7 @@ public class NavigationView extends Header {
     private DailyWeatherService dailyWeatherService;
     private HourlyWeatherService hourlyWeatherService;
     private NowcastWeatherService nowcastWeatherService;
+    private DetailWeatherService detailWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
@@ -42,11 +44,13 @@ public class NavigationView extends Header {
 
     @Autowired
     public NavigationView(GeoLocationService geoLocationService, DailyWeatherService dailyWeatherService,
-            HourlyWeatherService hourlyWeatherService, NowcastWeatherService nowcastWeatherService) {
+            HourlyWeatherService hourlyWeatherService, NowcastWeatherService nowcastWeatherService,
+            DetailWeatherService detailWeatherService) {
         this.geoLocationService = geoLocationService;
         this.dailyWeatherService = dailyWeatherService;
         this.hourlyWeatherService = hourlyWeatherService;
         this.nowcastWeatherService = nowcastWeatherService;
+        this.detailWeatherService = detailWeatherService;
         addClassName("navigation-bar");
 
         searchButton.addClassName("searchButton");
@@ -75,11 +79,12 @@ public class NavigationView extends Header {
                 boolean didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
                 boolean didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
                 boolean didNowcastServiceWork = callWeatherService(nowcastWeatherService, geoLocation);
+                boolean didDetailServiceWork = callWeatherService(detailWeatherService, geoLocation);
 
                 if (didNowcastServiceWork) {
                     fireEvent(new UpdateTodayWeatherEvent(this));
                 }
-                if (didHourlyServiceWork && didDailyServiceWork) {
+                if (didHourlyServiceWork && didDailyServiceWork && didDetailServiceWork) {
                     fireEvent(new UpdateWeatherEvent(this));
                 }
             }
