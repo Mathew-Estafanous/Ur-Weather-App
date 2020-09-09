@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.urweather.app.backend.entity.DayInformationEntity;
 import com.urweather.app.backend.service.DailyWeatherService;
+import com.urweather.app.helpers.ConstantSymbols;
 import com.urweather.app.helpers.ImageIconHelper;
 import com.urweather.app.helpers.TimezoneConvertorHelper;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -19,8 +20,6 @@ import org.springframework.stereotype.Component;
 public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     private DailyWeatherService dailyWeatherService;
-
-    private final String DEGREE_SYMBOL = "°";
 
     @Autowired
     public DailyWeatherSnippetView(DailyWeatherService dailyWeatherService) {
@@ -41,7 +40,8 @@ public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
                                                 day.getLon(), addHoursDate);
             DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("EE");
             String time = convertedDate.format(dateFormat).toUpperCase();
-            String temp = Math.round(day.getMax()) + DEGREE_SYMBOL + "/" + Math.round(day.getMin()) + DEGREE_SYMBOL;
+            String temp = Math.round(day.getMax()) + ConstantSymbols.DEGREE + "/"
+                + Math.round(day.getMin()) + ConstantSymbols.DEGREE;
             String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCode(day.getWeatherCode());
             addWeatherSnippet(time, imageSrc, temp);
         });
