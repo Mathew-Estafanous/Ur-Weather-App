@@ -18,8 +18,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.urweather.app.helpers.ServicesConstants.GEOLOCATION_API_KEY;
-import static com.urweather.app.helpers.ServicesConstants.GEOLOCATION_API_URL;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_KEY;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_URL;
 
 @Service
 public class GeoLocationService extends AbstractService<String, GeoLocationObject, String[]>{

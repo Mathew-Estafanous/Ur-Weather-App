@@ -17,6 +17,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
+import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
+import static com.urweather.app.helpers.APIConstants.SI;
+import static com.urweather.app.helpers.APIConstants.NOWCAST_FIELDS;;
+
 @Service
 public class NowcastWeatherService extends AbstractService<GeoLocationObject, NowcastObject, GeoLocationObject> {
 
@@ -53,14 +59,14 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL)
+        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL)
                 .addPathSegment("v3").addPathSegment("weather")
                 .addPathSegment("realtime")
                 .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
-                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
-                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
+                .addQueryParameter(UNIT_SYSTEM, SI)
+                .addQueryParameter("fields", NOWCAST_FIELDS)
+                .addQueryParameter("apikey", CLIMACELL_API_KEY);
     }
 
     public NowcastObject getCurreNowcastObject() {

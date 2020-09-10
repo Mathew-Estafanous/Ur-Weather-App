@@ -25,6 +25,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
+import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
+import static com.urweather.app.helpers.APIConstants.SI;
+import static com.urweather.app.helpers.APIConstants.DAILY_FIELDS;
 @Service
 public class DailyWeatherService extends AbstractService<GeoLocationObject, List<DayInformationEntity>, GeoLocationObject> {
 
@@ -65,14 +70,14 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL).addPathSegment("v3")
+        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL).addPathSegment("v3")
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")
                 .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
+                .addQueryParameter(UNIT_SYSTEM, SI)
                 .addQueryParameter("start_time", "now")
-                .addQueryParameter("fields", "temp,weather_code")
-                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
+                .addQueryParameter("fields", DAILY_FIELDS)
+                .addQueryParameter("apikey", CLIMACELL_API_KEY);
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {

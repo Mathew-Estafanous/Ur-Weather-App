@@ -28,6 +28,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
+import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
+import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
+import static com.urweather.app.helpers.APIConstants.SI;
+import static com.urweather.app.helpers.APIConstants.HOURLY_FIELDS;
+
 @Service
 public class HourlyWeatherService
         extends AbstractService<GeoLocationObject, List<HourlyInformationEntity>, GeoLocationObject> {
@@ -75,15 +81,15 @@ public class HourlyWeatherService
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL).addPathSegment("v3")
+        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL).addPathSegment("v3")
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
                 .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
+                .addQueryParameter(UNIT_SYSTEM, SI)
                 .addQueryParameter("start_time", "now")
                 .addQueryParameter("end_time", formatter.format(futureEndTime))
-                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
-                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
+                .addQueryParameter("fields", HOURLY_FIELDS)
+                .addQueryParameter("apikey", CLIMACELL_API_KEY);
     }
 
     public List<HourlyInformationEntity> getListOfHourlyInformation() {
