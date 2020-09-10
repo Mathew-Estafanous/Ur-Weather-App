@@ -14,13 +14,13 @@ public class HourlyInformationEntity extends AbstractEntity {
     @SerializedName("lon")
     private double longitude;
 
-    @SerializedName("current_temp")
+    @SerializedName("temp")
     private double currentTemp;
 
     @SerializedName("weather_code")
     private String weatherCode;
 
-    @SerializedName("time")
+    @SerializedName("observation_time")
     private Date hourTime;
     @SerializedName("sunrise")
     private Date sunrise;

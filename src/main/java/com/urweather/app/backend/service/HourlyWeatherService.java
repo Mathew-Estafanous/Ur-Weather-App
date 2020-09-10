@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.repository.HourlyInformationRepository;
+import com.urweather.app.helpers.ServicesConstants;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ import okhttp3.ResponseBody;
 public class HourlyWeatherService
         extends AbstractService<GeoLocationObject, List<HourlyInformationEntity>, GeoLocationObject> {
 
-    private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
     @Autowired
     private HourlyInformationRepository hourlyInformationRepo;
@@ -75,13 +75,15 @@ public class HourlyWeatherService
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
+        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL).addPathSegment("v3")
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
-                .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-                .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter("unit_system", "si").addQueryParameter("start_time", "now")
+                .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
+                .addQueryParameter("start_time", "now")
                 .addQueryParameter("end_time", formatter.format(futureEndTime))
-                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset").addQueryParameter("apikey", API_KEY);
+                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
+                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
     }
 
     public List<HourlyInformationEntity> getListOfHourlyInformation() {
@@ -98,13 +100,13 @@ public class HourlyWeatherService
     private HourlyInformationEntity createHourlyInformationEntity(JsonObject hourJsonObject) {
         JsonObject hourInformatioObject = new JsonObject();
         Gson hourGson = new Gson();
-        hourInformatioObject.add("lat", hourJsonObject.get("lat"));
-        hourInformatioObject.add("lon", hourJsonObject.get("lon"));
-        hourInformatioObject.add("current_temp", hourJsonObject.get("temp").getAsJsonObject().get("value"));
-        hourInformatioObject.add("weather_code", hourJsonObject.get("weather_code").getAsJsonObject().get("value"));
-        hourInformatioObject.add("time", hourJsonObject.get("observation_time").getAsJsonObject().get("value"));
-        hourInformatioObject.add("sunset", hourJsonObject.get("sunset").getAsJsonObject().get("value"));
-        hourInformatioObject.add("sunrise", hourJsonObject.get("sunrise").getAsJsonObject().get("value"));
+        hourInformatioObject.add(ServicesConstants.LAT, hourJsonObject.get(ServicesConstants.LAT));
+        hourInformatioObject.add(ServicesConstants.LON, hourJsonObject.get(ServicesConstants.LON));
+        hourInformatioObject.add(ServicesConstants.TEMPERATURE, getValueFromElement(hourJsonObject.get(ServicesConstants.TEMPERATURE)));
+        hourInformatioObject.add(ServicesConstants.WEATHER_CODE, getValueFromElement(hourJsonObject.get(ServicesConstants.WEATHER_CODE)));
+        hourInformatioObject.add(ServicesConstants.TIME, getValueFromElement(hourJsonObject.get(ServicesConstants.TIME)));
+        hourInformatioObject.add(ServicesConstants.SUNSET, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNSET)));
+        hourInformatioObject.add(ServicesConstants.SUNRISE, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNRISE)));
 
         return hourGson.fromJson(hourInformatioObject.toString(), HourlyInformationEntity.class);
     }

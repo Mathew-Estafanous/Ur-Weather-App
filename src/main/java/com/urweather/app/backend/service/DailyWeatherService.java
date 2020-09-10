@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.DayInformationEntity;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.repository.DayInformationRepository;
+import com.urweather.app.helpers.ServicesConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,6 @@ import okhttp3.ResponseBody;
 
 @Service
 public class DailyWeatherService extends AbstractService<GeoLocationObject, List<DayInformationEntity>, GeoLocationObject> {
-
-    private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
 
     @Autowired
     private DayInformationRepository dayInformationRepo;
@@ -66,12 +65,14 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host("api.climacell.co").addPathSegment("v3")
+        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL).addPathSegment("v3")
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")
-                .addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-                .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter("unit_system", "si").addQueryParameter("start_time", "now")
-                .addQueryParameter("fields", "temp,weather_code").addQueryParameter("apikey", API_KEY);
+                .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
+                .addQueryParameter("start_time", "now")
+                .addQueryParameter("fields", "temp,weather_code")
+                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
@@ -90,14 +91,13 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
     private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject) {
         JsonObject dayInformationJson = new JsonObject();
         Gson gson = new Gson();
-        dayInformationJson.add("lat", dayJsonObject.get("lat"));
-        dayInformationJson.add("lon", dayJsonObject.get("lon"));
-        dayInformationJson.add("observation_time",
-                dayJsonObject.get("observation_time").getAsJsonObject().get("value"));
-        dayInformationJson.add("weather_code", dayJsonObject.get("weather_code").getAsJsonObject().get("value"));
-        JsonArray tempJsonArray = dayJsonObject.get("temp").getAsJsonArray();
-        dayInformationJson.add("min", tempJsonArray.get(0).getAsJsonObject().get("min").getAsJsonObject().get("value"));
-        dayInformationJson.add("max", tempJsonArray.get(1).getAsJsonObject().get("max").getAsJsonObject().get("value"));
+        dayInformationJson.add(ServicesConstants.LAT, dayJsonObject.get(ServicesConstants.LAT));
+        dayInformationJson.add(ServicesConstants.LON, dayJsonObject.get(ServicesConstants.LON));
+        dayInformationJson.add(ServicesConstants.TIME, getValueFromElement(dayJsonObject.get(ServicesConstants.TIME)));
+        dayInformationJson.add(ServicesConstants.WEATHER_CODE, getValueFromElement(dayJsonObject.get(ServicesConstants.WEATHER_CODE)));
+        JsonArray tempJsonArray = dayJsonObject.get(ServicesConstants.TEMPERATURE).getAsJsonArray();
+        dayInformationJson.add("min", getValueFromElement(tempJsonArray.get(0).getAsJsonObject().get("min")));
+        dayInformationJson.add("max", getValueFromElement(tempJsonArray.get(1).getAsJsonObject().get("max")));
 
         return gson.fromJson(dayInformationJson.toString(), DayInformationEntity.class);
     }

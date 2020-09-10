@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.entity.NowcastObject;
+import com.urweather.app.helpers.ServicesConstants;
 
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,6 @@ import okhttp3.ResponseBody;
 
 @Service
 public class NowcastWeatherService extends AbstractService<GeoLocationObject, NowcastObject, GeoLocationObject> {
-
-    private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
-    private final String API_URL = "api.climacell.co";
 
     private static NowcastObject currentNowcastInformation;
 
@@ -43,24 +41,26 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
         Gson gson = new Gson();
         JsonObject responseJsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
         JsonObject nowcastJsonObject = new JsonObject();
-        nowcastJsonObject.add("lat", responseJsonObject.get("lat"));
-        nowcastJsonObject.add("lon", responseJsonObject.get("lon"));
-        nowcastJsonObject.add("temp", responseJsonObject.get("temp").getAsJsonObject().get("value"));
-        nowcastJsonObject.add("weather_code", responseJsonObject.get("weather_code").getAsJsonObject().get("value"));
-        nowcastJsonObject.add("observation_time",
-                responseJsonObject.get("observation_time").getAsJsonObject().get("value"));
-        nowcastJsonObject.add("sunrise", responseJsonObject.get("sunrise").getAsJsonObject().get("value"));
-        nowcastJsonObject.add("sunset", responseJsonObject.get("sunset").getAsJsonObject().get("value"));
+        nowcastJsonObject.add(ServicesConstants.LAT, responseJsonObject.get(ServicesConstants.LAT));
+        nowcastJsonObject.add(ServicesConstants.LON, responseJsonObject.get(ServicesConstants.LON));
+        nowcastJsonObject.add(ServicesConstants.TEMPERATURE, getValueFromElement(responseJsonObject.get(ServicesConstants.TEMPERATURE)));
+        nowcastJsonObject.add(ServicesConstants.WEATHER_CODE, getValueFromElement(responseJsonObject.get(ServicesConstants.WEATHER_CODE)));
+        nowcastJsonObject.add(ServicesConstants.TIME, getValueFromElement(responseJsonObject.get(ServicesConstants.TIME )));
+        nowcastJsonObject.add(ServicesConstants.SUNRISE, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNRISE)));
+        nowcastJsonObject.add(ServicesConstants.SUNSET, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNSET)));
         return gson.fromJson(nowcastJsonObject.toString(), NowcastObject.class);
     }
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(API_URL).addPathSegment("v3").addPathSegment("weather")
-                .addPathSegment("realtime").addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-                .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter("unit_system", "si").addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
-                .addQueryParameter("apikey", API_KEY);
+        return new HttpUrl.Builder().scheme("https").host(ServicesConstants.CLIMACELL_API_URL)
+                .addPathSegment("v3").addPathSegment("weather")
+                .addPathSegment("realtime")
+                .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter(ServicesConstants.UNIT_SYSTEM, ServicesConstants.SI)
+                .addQueryParameter("fields", "temp,weather_code,sunrise,sunset")
+                .addQueryParameter("apikey", ServicesConstants.CLIMACELL_API_KEY);
     }
 
     public NowcastObject getCurreNowcastObject() {
