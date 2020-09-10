@@ -48,12 +48,12 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
-        .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
-        .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
-        .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-        .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
-        .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
-        .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+                .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
+                .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
+                .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
+                .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public DetailWeatherObject getDetailWeatherInformation() {

@@ -53,7 +53,8 @@ public class HourlyWeatherService
         Gson gson = new Gson();
         Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedHourlyJsonObjects = gson.fromJson(responseBody.string(), hourlyType);
-        return unParsedHourlyJsonObjects.stream().map(hour -> createHourlyInformationEntity(hour))
+        return unParsedHourlyJsonObjects.stream()
+                .map(hour -> createHourlyInformationEntity(hour))
                 .collect(Collectors.toList());
     }
 
