@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.repository.HourlyInformationRepository;
+import com.urweather.app.helpers.APIConstants;
 import com.urweather.app.helpers.ServicesConstants;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -27,12 +28,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
-import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
-import static com.urweather.app.helpers.APIConstants.SI;
-import static com.urweather.app.helpers.APIConstants.HOURLY_FIELDS;
 
 @Service
 public class HourlyWeatherService
@@ -81,15 +76,16 @@ public class HourlyWeatherService
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL).addPathSegment("v3")
+        return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
+                .addPathSegment(APIConstants.VERSION)
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
                 .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter(UNIT_SYSTEM, SI)
+                .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
                 .addQueryParameter("start_time", "now")
                 .addQueryParameter("end_time", formatter.format(futureEndTime))
-                .addQueryParameter("fields", HOURLY_FIELDS)
-                .addQueryParameter("apikey", CLIMACELL_API_KEY);
+                .addQueryParameter("fields", APIConstants.HOURLY_FIELDS)
+                .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public List<HourlyInformationEntity> getListOfHourlyInformation() {

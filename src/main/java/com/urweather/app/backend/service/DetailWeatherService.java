@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.DetailWeatherObject;
 import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.helpers.APIConstants;
 import com.urweather.app.helpers.ServicesConstants;
 
 import org.springframework.stereotype.Service;
@@ -17,11 +18,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
-import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
-import static com.urweather.app.helpers.APIConstants.SI;
-import static com.urweather.app.helpers.APIConstants.DETAILS_FIELDS;
 @Service
 public class DetailWeatherService extends AbstractService<GeoLocationObject, DetailWeatherObject, GeoLocationObject> {
 
@@ -62,13 +58,13 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL)
-        .addPathSegment("v3").addPathSegment("weather")
+        return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
+        .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
         .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
         .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-        .addQueryParameter(UNIT_SYSTEM, SI)
-        .addQueryParameter("fields", DETAILS_FIELDS)
-        .addQueryParameter("apikey", CLIMACELL_API_KEY);
+        .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
+        .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
+        .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public DetailWeatherObject getDetailWeatherInformation() {

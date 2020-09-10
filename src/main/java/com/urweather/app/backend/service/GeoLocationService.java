@@ -20,6 +20,8 @@ import okhttp3.ResponseBody;
 
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_KEY;
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_URL;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_SCHEME;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_VERSION;
 
 @Service
 public class GeoLocationService extends AbstractService<String, GeoLocationObject, String[]>{
@@ -61,8 +63,8 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(String[] splitUserInput) {
-        return new HttpUrl.Builder().scheme("https").host(GEOLOCATION_API_URL)
-                .addPathSegment("v1").addPathSegment("geo").addPathSegment("cities")
+        return new HttpUrl.Builder().scheme(GEOLOCATION_SCHEME).host(GEOLOCATION_API_URL)
+                .addPathSegment(GEOLOCATION_VERSION).addPathSegment("geo").addPathSegment("cities")
                 .addQueryParameter("namePrefix", splitUserInput[0])
                 .addQueryParameter("countryIds", splitUserInput[1].replaceAll("\\s+", ""));
     }

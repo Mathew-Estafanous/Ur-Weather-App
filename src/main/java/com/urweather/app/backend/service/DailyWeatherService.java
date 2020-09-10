@@ -15,6 +15,7 @@ import com.urweather.app.backend.entity.DayInformationEntity;
 import com.urweather.app.backend.entity.GeoLocationObject;
 import com.urweather.app.backend.repository.DayInformationRepository;
 import com.urweather.app.helpers.ServicesConstants;
+import com.urweather.app.helpers.APIConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_KEY;
-import static com.urweather.app.helpers.APIConstants.CLIMACELL_API_URL;
-import static com.urweather.app.helpers.APIConstants.UNIT_SYSTEM;
-import static com.urweather.app.helpers.APIConstants.SI;
-import static com.urweather.app.helpers.APIConstants.DAILY_FIELDS;
 @Service
 public class DailyWeatherService extends AbstractService<GeoLocationObject, List<DayInformationEntity>, GeoLocationObject> {
 
@@ -70,14 +66,15 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(CLIMACELL_API_URL).addPathSegment("v3")
+        return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
+                .addPathSegment(APIConstants.VERSION)
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")
                 .addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-                .addQueryParameter(UNIT_SYSTEM, SI)
+                .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
                 .addQueryParameter("start_time", "now")
-                .addQueryParameter("fields", DAILY_FIELDS)
-                .addQueryParameter("apikey", CLIMACELL_API_KEY);
+                .addQueryParameter("fields", APIConstants.DAILY_FIELDS)
+                .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {
