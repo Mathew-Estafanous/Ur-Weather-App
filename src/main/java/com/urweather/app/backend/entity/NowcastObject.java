@@ -4,21 +4,29 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+import static com.urweather.app.helpers.ServicesConstants.LAT;
+import static com.urweather.app.helpers.ServicesConstants.LON;
+import static com.urweather.app.helpers.ServicesConstants.TEMPERATURE;
+import static com.urweather.app.helpers.ServicesConstants.WEATHER_CODE;
+import static com.urweather.app.helpers.ServicesConstants.TIME;
+import static com.urweather.app.helpers.ServicesConstants.SUNRISE;
+import static com.urweather.app.helpers.ServicesConstants.SUNSET;
+
 public class NowcastObject {
 
-    @SerializedName("lat")
+    @SerializedName(LAT)
     private double latitude;
-    @SerializedName("lon")
+    @SerializedName(LON)
     private double longitude;
-    @SerializedName("temp")
+    @SerializedName(TEMPERATURE)
     private double temperature;
-    @SerializedName("weather_code")
+    @SerializedName(WEATHER_CODE)
     private String weatherCode;
-    @SerializedName("observation_time")
+    @SerializedName(TIME)
     private Date currentDate;
-    @SerializedName("sunset")
+    @SerializedName(SUNSET)
     private Date sunset;
-    @SerializedName("sunrise")
+    @SerializedName(SUNRISE)
     private Date sunrise;
 
     public double getLatitude() {
