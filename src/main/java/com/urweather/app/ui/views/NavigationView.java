@@ -68,7 +68,7 @@ public class NavigationView extends Header {
     }
 
     @PostConstruct
-    public void testExample() {
+    public void createFirstButtonEvent() {
         searchButton.click();
     }
 

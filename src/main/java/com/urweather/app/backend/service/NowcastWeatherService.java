@@ -13,9 +13,6 @@ import com.urweather.app.helpers.ServicesConstants;
 import org.springframework.stereotype.Service;
 
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
@@ -25,14 +22,9 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
 
     @Override
     public void callService(GeoLocationObject geoLocationObject) throws JsonSyntaxException, IOException {
-        OkHttpClient client = new OkHttpClient();
-
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocationObject);
 
-        Request request = new Request.Builder().url(urlBuilder.toString()).get().build();
-
-        Response response = client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
+        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
 
         currentNowcastInformation = parseResponseBody(responseBody);
     }

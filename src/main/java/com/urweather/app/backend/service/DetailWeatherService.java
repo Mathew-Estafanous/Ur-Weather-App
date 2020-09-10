@@ -13,9 +13,6 @@ import com.urweather.app.helpers.ServicesConstants;
 import org.springframework.stereotype.Service;
 
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
@@ -25,17 +22,9 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
 
     @Override
     public void callService(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
-        if(geoLocation == null) {
-            throw new NullPointerException("Geo location is null!");
-        }
-        OkHttpClient client = new OkHttpClient();
-
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
 
-        Request request = new Request.Builder().url(urlBuilder.toString()).get().build();
-
-        Response response = client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
+        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
 
         currentDetailWeatherInformation = parseResponseBody(responseBody);
     }
@@ -59,12 +48,12 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
-        .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
-        .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
-        .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
-        .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
-        .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
-        .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+                .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
+                .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+                .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+                .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
+                .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
+                .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public DetailWeatherObject getDetailWeatherInformation() {
