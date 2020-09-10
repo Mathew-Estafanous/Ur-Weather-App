@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.HttpUrl.Builder;
 
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_KEY;
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_URL;
@@ -31,18 +32,10 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
     @Override
     public final void callService(String userInput) throws JsonSyntaxException, IOException, NullPointerException {
         String[] splitUserInput = parseAndReturnCityAndCountry(userInput);
-        OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = createUrlBuilder(splitUserInput);
 
-        Request request = new Request.Builder().url(urlBuilder.toString())
-                            .get()
-                            .addHeader("x-rapidapi-host", GEOLOCATION_API_URL)
-                            .addHeader("x-rapidapi-key", GEOLOCATION_API_KEY)
-                            .build();
-
-        Response response = client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
+        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
 
         currentGeoLocation = parseResponseBody(responseBody);
     }
@@ -67,6 +60,19 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
                 .addPathSegment(GEOLOCATION_VERSION).addPathSegment("geo").addPathSegment("cities")
                 .addQueryParameter("namePrefix", splitUserInput[0])
                 .addQueryParameter("countryIds", splitUserInput[1].replaceAll("\\s+", ""));
+    }
+
+    @Override
+    protected ResponseBody callRequestAndReturnResponseBody(Builder urlBuilder) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(urlBuilder.toString())
+                            .get()
+                            .addHeader("x-rapidapi-host", GEOLOCATION_API_URL)
+                            .addHeader("x-rapidapi-key", GEOLOCATION_API_KEY)
+                            .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body();
     }
 
     public GeoLocationObject getCurrentGeoLocation() {

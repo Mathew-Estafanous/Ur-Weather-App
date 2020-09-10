@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static com.urweather.app.helpers.ServicesConstants.VALUE;
@@ -20,5 +23,14 @@ public abstract class AbstractService<T, E, G> {
 
     protected JsonElement getValueFromElement(JsonElement element) {
         return element.getAsJsonObject().get(VALUE);
+    }
+
+    protected ResponseBody callRequestAndReturnResponseBody(HttpUrl.Builder urlBuilder) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder().url(urlBuilder.toString()).get().build();
+
+        Response response = client.newCall(request).execute();
+        return response.body();
     }
 }

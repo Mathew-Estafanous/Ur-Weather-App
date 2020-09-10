@@ -24,9 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Service
@@ -43,18 +40,9 @@ public class HourlyWeatherService
 
     @Override
     public void callService(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
-        if (geoLocation == null) {
-            throw new NullPointerException("Geo location is null!");
-        }
-
-        OkHttpClient client = new OkHttpClient();
-
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
 
-        Request request = new Request.Builder().url(urlBuilder.toString()).get().build();
-
-        Response response = client.newCall(request).execute();
-        ResponseBody responseBody = response.body();
+        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
 
         List<HourlyInformationEntity> listOfHourlyEntities = parseResponseBody(responseBody);
         addHourlyInformationToRepository(listOfHourlyEntities);
@@ -63,8 +51,7 @@ public class HourlyWeatherService
     @Override
     protected List<HourlyInformationEntity> parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
-        Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {
-        }.getType();
+        Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedHourlyJsonObjects = gson.fromJson(responseBody.string(), hourlyType);
         return unParsedHourlyJsonObjects.stream().map(hour -> createHourlyInformationEntity(hour))
                 .collect(Collectors.toList());
