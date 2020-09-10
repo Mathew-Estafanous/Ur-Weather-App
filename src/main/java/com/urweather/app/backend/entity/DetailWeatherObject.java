@@ -4,23 +4,32 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
+import static com.urweather.app.helpers.ServicesConstants.LAT;
+import static com.urweather.app.helpers.ServicesConstants.LON;
+import static com.urweather.app.helpers.ServicesConstants.SUNRISE;
+import static com.urweather.app.helpers.ServicesConstants.SUNSET;
+import static com.urweather.app.helpers.ServicesConstants.CLOUD_COVER;
+import static com.urweather.app.helpers.ServicesConstants.HUMIDITY;
+import static com.urweather.app.helpers.ServicesConstants.VISIBILITY;
+import static com.urweather.app.helpers.ServicesConstants.PRESSURE;
+
 public class DetailWeatherObject {
 
-    @SerializedName("lat")
+    @SerializedName(LAT)
     private double latitude;
-    @SerializedName("lon")
+    @SerializedName(LON)
     private double longitude;
-    @SerializedName("sunrise")
+    @SerializedName(SUNRISE)
     private Date sunrise;
-    @SerializedName("sunset")
+    @SerializedName(SUNSET)
     private Date sunset;
-    @SerializedName("cloud_cover")
+    @SerializedName(CLOUD_COVER)
     private double cloudPercent;
-    @SerializedName("humidity")
+    @SerializedName(HUMIDITY)
     private double humidityPercent;
-    @SerializedName("visibility")
+    @SerializedName(VISIBILITY)
     private double visibility;
-    @SerializedName("baro_pressure")
+    @SerializedName(PRESSURE)
     private double pressure;
 
     public Date getSunrise() {

@@ -6,25 +6,33 @@ import javax.persistence.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import static com.urweather.app.helpers.ServicesConstants.LAT;
+import static com.urweather.app.helpers.ServicesConstants.LON;
+import static com.urweather.app.helpers.ServicesConstants.TEMPERATURE;
+import static com.urweather.app.helpers.ServicesConstants.WEATHER_CODE;
+import static com.urweather.app.helpers.ServicesConstants.TIME;
+import static com.urweather.app.helpers.ServicesConstants.SUNRISE;
+import static com.urweather.app.helpers.ServicesConstants.SUNSET;
+
 @Entity
 public class HourlyInformationEntity extends AbstractEntity {
 
-    @SerializedName("lat")
+    @SerializedName(LAT)
     private double latitude;
-    @SerializedName("lon")
+    @SerializedName(LON)
     private double longitude;
 
-    @SerializedName("current_temp")
+    @SerializedName(TEMPERATURE)
     private double currentTemp;
 
-    @SerializedName("weather_code")
+    @SerializedName(WEATHER_CODE)
     private String weatherCode;
 
-    @SerializedName("time")
+    @SerializedName(TIME)
     private Date hourTime;
-    @SerializedName("sunrise")
+    @SerializedName(SUNRISE)
     private Date sunrise;
-    @SerializedName("sunset")
+    @SerializedName(SUNSET)
     private Date sunset;
 
     public double getLatitude() {

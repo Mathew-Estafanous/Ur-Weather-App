@@ -18,11 +18,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_KEY;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_API_URL;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_SCHEME;
+import static com.urweather.app.helpers.APIConstants.GEOLOCATION_VERSION;
+
 @Service
 public class GeoLocationService extends AbstractService<String, GeoLocationObject, String[]>{
-
-    private final String API_KEY = "be30b7151fmsh5d10acd0004f7d9p10b38cjsn7da69bed5f1a";
-    private final String API_URL = "wft-geo-db.p.rapidapi.com";
 
     private static GeoLocationObject currentGeoLocation;
 
@@ -35,8 +37,8 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
 
         Request request = new Request.Builder().url(urlBuilder.toString())
                             .get()
-                            .addHeader("x-rapidapi-host", API_URL)
-                            .addHeader("x-rapidapi-key", API_KEY)
+                            .addHeader("x-rapidapi-host", GEOLOCATION_API_URL)
+                            .addHeader("x-rapidapi-key", GEOLOCATION_API_KEY)
                             .build();
 
         Response response = client.newCall(request).execute();
@@ -61,8 +63,8 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(String[] splitUserInput) {
-        return new HttpUrl.Builder().scheme("https").host(API_URL)
-                .addPathSegment("v1").addPathSegment("geo").addPathSegment("cities")
+        return new HttpUrl.Builder().scheme(GEOLOCATION_SCHEME).host(GEOLOCATION_API_URL)
+                .addPathSegment(GEOLOCATION_VERSION).addPathSegment("geo").addPathSegment("cities")
                 .addQueryParameter("namePrefix", splitUserInput[0])
                 .addQueryParameter("countryIds", splitUserInput[1].replaceAll("\\s+", ""));
     }

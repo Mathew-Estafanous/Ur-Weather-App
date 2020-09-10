@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.DetailWeatherObject;
 import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.helpers.APIConstants;
+import com.urweather.app.helpers.ServicesConstants;
 
 import org.springframework.stereotype.Service;
 
@@ -18,9 +20,6 @@ import okhttp3.ResponseBody;
 
 @Service
 public class DetailWeatherService extends AbstractService<GeoLocationObject, DetailWeatherObject, GeoLocationObject> {
-
-    private final String API_KEY = "jZdP0f1KuUvdEIrQPLomXIQGdutw9mI1";
-    private final String API_URL = "api.climacell.co";
 
     private static DetailWeatherObject currentDetailWeatherInformation;
 
@@ -46,25 +45,26 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
         Gson gson = new Gson();
         JsonObject responseJsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
         JsonObject detailInfoObject = new JsonObject();
-        detailInfoObject.add("lat", responseJsonObject.get("lat"));
-        detailInfoObject.add("lon", responseJsonObject.get("lon"));
-        detailInfoObject.add("sunrise", responseJsonObject.get("sunrise").getAsJsonObject().get("value"));
-        detailInfoObject.add("sunset", responseJsonObject.get("sunset").getAsJsonObject().get("value"));
-        detailInfoObject.add("cloud_cover", responseJsonObject.get("cloud_cover").getAsJsonObject().get("value"));
-        detailInfoObject.add("humidity", responseJsonObject.get("humidity").getAsJsonObject().get("value"));
-        detailInfoObject.add("baro_pressure", responseJsonObject.get("baro_pressure").getAsJsonObject().get("value"));
-        detailInfoObject.add("visibility", responseJsonObject.get("visibility").getAsJsonObject().get("value"));
+        detailInfoObject.add(ServicesConstants.LAT, responseJsonObject.get(ServicesConstants.LAT));
+        detailInfoObject.add(ServicesConstants.LON, responseJsonObject.get(ServicesConstants.LON));
+        detailInfoObject.add(ServicesConstants.SUNRISE, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNRISE)));
+        detailInfoObject.add(ServicesConstants.SUNSET, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNSET)));
+        detailInfoObject.add(ServicesConstants.CLOUD_COVER, getValueFromElement(responseJsonObject.get(ServicesConstants.CLOUD_COVER)));
+        detailInfoObject.add(ServicesConstants.HUMIDITY, getValueFromElement(responseJsonObject.get(ServicesConstants.HUMIDITY)));
+        detailInfoObject.add(ServicesConstants.PRESSURE, getValueFromElement(responseJsonObject.get(ServicesConstants.PRESSURE)));
+        detailInfoObject.add(ServicesConstants.VISIBILITY, getValueFromElement(responseJsonObject.get(ServicesConstants.VISIBILITY)));
         return gson.fromJson(detailInfoObject.toString(), DetailWeatherObject.class);
     }
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
-        return new HttpUrl.Builder().scheme("https").host(API_URL).addPathSegment("v3").addPathSegment("weather")
-        .addPathSegment("realtime").addQueryParameter("lat", Double.toString(geoLocation.getLatitude()))
-        .addQueryParameter("lon", Double.toString(geoLocation.getLongitude()))
-        .addQueryParameter("unit_system", "si")
-        .addQueryParameter("fields", "sunrise,sunset,humidity,visibility,cloud_cover,baro_pressure")
-        .addQueryParameter("apikey", API_KEY);
+        return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
+        .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
+        .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
+        .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
+        .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
+        .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
+        .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
     public DetailWeatherObject getDetailWeatherInformation() {

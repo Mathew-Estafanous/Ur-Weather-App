@@ -6,6 +6,11 @@ import javax.persistence.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import static com.urweather.app.helpers.ServicesConstants.LAT;
+import static com.urweather.app.helpers.ServicesConstants.LON;
+import static com.urweather.app.helpers.ServicesConstants.TIME;
+import static com.urweather.app.helpers.ServicesConstants.WEATHER_CODE;
+
 @Entity
 public class DayInformationEntity extends AbstractEntity {
     private static final long serialVersionUID = 1L;
@@ -13,20 +18,15 @@ public class DayInformationEntity extends AbstractEntity {
     private double min;
     private double max;
 
-    @SerializedName("lat")
+    @SerializedName(LAT)
     private double latitude;
-    @SerializedName("lon")
+    @SerializedName(LON)
     private double longitude;
 
-    @SerializedName("observation_time")
+    @SerializedName(TIME)
     private Date observationTime;
-    @SerializedName("weather_code")
+    @SerializedName(WEATHER_CODE)
     private String weatherCode;
-
-    @SerializedName("city_name")
-    private String cityName;
-    @SerializedName("country_code")
-    private String countryCode;
 
     public double getMin() {
         return min;
@@ -74,21 +74,5 @@ public class DayInformationEntity extends AbstractEntity {
 
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
     }
 }
