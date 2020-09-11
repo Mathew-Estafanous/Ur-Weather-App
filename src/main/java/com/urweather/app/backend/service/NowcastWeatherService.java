@@ -5,8 +5,8 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.urweather.app.backend.entity.GeoLocationObject;
-import com.urweather.app.backend.entity.NowcastObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
+import com.urweather.app.backend.entity.NowcastWeatherEntity;
 import com.urweather.app.helpers.APIConstants;
 import com.urweather.app.helpers.ServicesConstants;
 
@@ -16,12 +16,12 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class NowcastWeatherService extends AbstractService<GeoLocationObject, NowcastObject, GeoLocationObject> {
+public class NowcastWeatherService extends AbstractService<GeoLocationEntity, NowcastWeatherEntity, GeoLocationEntity> {
 
-    private static NowcastObject currentNowcastInformation;
+    private static NowcastWeatherEntity currentNowcastInformation;
 
     @Override
-    public void callService(GeoLocationObject geoLocationObject) throws JsonSyntaxException, IOException {
+    public void callService(GeoLocationEntity geoLocationObject) throws JsonSyntaxException, IOException {
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocationObject);
 
         ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
@@ -30,7 +30,7 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
     }
 
     @Override
-    protected NowcastObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    protected NowcastWeatherEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         JsonObject responseJsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
         JsonObject nowcastJsonObject = new JsonObject();
@@ -41,11 +41,11 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
         nowcastJsonObject.add(ServicesConstants.TIME, getValueFromElement(responseJsonObject.get(ServicesConstants.TIME )));
         nowcastJsonObject.add(ServicesConstants.SUNRISE, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNRISE)));
         nowcastJsonObject.add(ServicesConstants.SUNSET, getValueFromElement(responseJsonObject.get(ServicesConstants.SUNSET)));
-        return gson.fromJson(nowcastJsonObject.toString(), NowcastObject.class);
+        return gson.fromJson(nowcastJsonObject.toString(), NowcastWeatherEntity.class);
     }
 
     @Override
-    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationEntity geoLocation) {
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
                 .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
                 .addPathSegment("realtime")
@@ -56,7 +56,7 @@ public class NowcastWeatherService extends AbstractService<GeoLocationObject, No
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
-    public NowcastObject getCurreNowcastObject() {
+    public NowcastWeatherEntity getCurreNowcastObject() {
         return currentNowcastInformation;
     }
 }

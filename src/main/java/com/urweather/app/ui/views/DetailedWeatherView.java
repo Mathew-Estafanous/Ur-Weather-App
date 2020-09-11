@@ -3,7 +3,7 @@ package com.urweather.app.ui.views;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.urweather.app.backend.entity.DetailWeatherObject;
+import com.urweather.app.backend.entity.DetailWeatherEntity;
 import com.urweather.app.backend.service.DetailWeatherService;
 import com.urweather.app.helpers.ConstantSymbols;
 import com.urweather.app.helpers.TimezoneConvertorHelper;
@@ -43,7 +43,7 @@ public class DetailedWeatherView extends HorizontalLayout {
     }
 
     public void updateDetailWeatherInformation() {
-        DetailWeatherObject detailedWeather = detailWeatherService.getDetailWeatherInformation();
+        DetailWeatherEntity detailedWeather = detailWeatherService.getDetailWeatherInformation();
         ZonedDateTime convertedSunrise = TimezoneConvertorHelper.convertDateToLocalTimezone(detailedWeather.getLatitude(),
                                 detailedWeather.getLongitude(), detailedWeather.getSunrise());
         ZonedDateTime convertedSunset = TimezoneConvertorHelper.convertDateToLocalTimezone(detailedWeather.getLatitude(),

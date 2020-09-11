@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 
 import com.google.gson.JsonSyntaxException;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,12 +33,12 @@ public class HourlyWeatherServiceTest {
     @Test(expected = Exception.class)
     public void failedWhenGivenNullObjects() throws Exception {
         hourlyWeatherService.callService(null);
-        hourlyWeatherService.callService(new GeoLocationObject());
+        hourlyWeatherService.callService(new GeoLocationEntity());
     }
 
     @Before
     public void createGeoLocationAndCallHourlyService() {
-        GeoLocationObject geoLocationObj = new GeoLocationObject();
+        GeoLocationEntity geoLocationObj = new GeoLocationEntity();
         try {
             geoLocationService.callService("Richmond Hill, CA");
             geoLocationObj = geoLocationService.getCurrentGeoLocation();

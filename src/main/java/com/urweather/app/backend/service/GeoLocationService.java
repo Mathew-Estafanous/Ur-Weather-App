@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.googlecode.gentyref.TypeToken;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 
 import org.springframework.stereotype.Service;
 
@@ -25,9 +25,9 @@ import static com.urweather.app.helpers.APIConstants.GEOLOCATION_SCHEME;
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_VERSION;
 
 @Service
-public class GeoLocationService extends AbstractService<String, GeoLocationObject, String[]>{
+public class GeoLocationService extends AbstractService<String, GeoLocationEntity, String[]>{
 
-    private static GeoLocationObject currentGeoLocation;
+    private static GeoLocationEntity currentGeoLocation;
 
     @Override
     public final void callService(String userInput) throws JsonSyntaxException, IOException, NullPointerException {
@@ -41,12 +41,12 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
     }
 
     @Override
-    protected GeoLocationObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    protected GeoLocationEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         Type jsonType = new TypeToken<JsonObject>() {}.getType();
         JsonObject jsonObj = gson.fromJson(responseBody.string(), jsonType);
 
-        Type geoLocationType = new TypeToken<GeoLocationObject>() {}.getType();
+        Type geoLocationType = new TypeToken<GeoLocationEntity>() {}.getType();
         try {
             return gson.fromJson(jsonObj.get("data").getAsJsonArray().get(0).getAsJsonObject().toString(), geoLocationType);
         } catch (IndexOutOfBoundsException e) {
@@ -75,7 +75,7 @@ public class GeoLocationService extends AbstractService<String, GeoLocationObjec
         return response.body();
     }
 
-    public GeoLocationObject getCurrentGeoLocation() {
+    public GeoLocationEntity getCurrentGeoLocation() {
         return currentGeoLocation;
     }
 

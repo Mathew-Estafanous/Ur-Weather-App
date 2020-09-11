@@ -3,8 +3,8 @@ package com.urweather.app.ui.views;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.urweather.app.backend.entity.GeoLocationObject;
-import com.urweather.app.backend.entity.NowcastObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
+import com.urweather.app.backend.entity.NowcastWeatherEntity;
 import com.urweather.app.backend.service.GeoLocationService;
 import com.urweather.app.backend.service.NowcastWeatherService;
 import com.urweather.app.helpers.ImageIconHelper;
@@ -48,8 +48,8 @@ public class CurrentDayView extends VerticalLayout {
     }
 
     public void updateDayViewInformation() {
-        GeoLocationObject geoLocation = geoLocationService.getCurrentGeoLocation();
-        NowcastObject nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
+        GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
 
         cityLocation.setText(geoLocation.getCity());
 
