@@ -20,11 +20,4 @@ public class TimezoneConvertorHelper {
         return zoneId.map(zone -> pointInTime.atZone(zone))
                 .orElse(null);
     }
-
-    public final static Date addZoneDateHoursToGivenDate(Date startDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        calendar.add(Calendar.HOUR_OF_DAY,  ZonedDateTime.now().getHour());
-        return calendar.getTime();
-    }
  }
