@@ -25,20 +25,9 @@ import static com.urweather.app.helpers.APIConstants.GEOLOCATION_SCHEME;
 import static com.urweather.app.helpers.APIConstants.GEOLOCATION_VERSION;
 
 @Service
-public class GeoLocationService extends AbstractService<String, GeoLocationEntity, String[]>{
+public class GeoLocationService extends AbstractService<String[], GeoLocationEntity>{
 
     private static GeoLocationEntity currentGeoLocation;
-
-    @Override
-    public final void callService(String userInput) throws JsonSyntaxException, IOException, NullPointerException {
-        String[] splitUserInput = parseAndReturnCityAndCountry(userInput);
-
-        HttpUrl.Builder urlBuilder = createUrlBuilder(splitUserInput);
-
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-
-        currentGeoLocation = parseResponseBody(responseBody);
-    }
 
     @Override
     protected GeoLocationEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
@@ -75,15 +64,12 @@ public class GeoLocationService extends AbstractService<String, GeoLocationEntit
         return response.body();
     }
 
-    public GeoLocationEntity getCurrentGeoLocation() {
-        return currentGeoLocation;
+    @Override
+    protected void storeEntityInChosenLocaion(GeoLocationEntity entity) {
+        currentGeoLocation = entity;
     }
 
-    private String[] parseAndReturnCityAndCountry(String userInput) throws InputMismatchException {
-        String[] splitInput = userInput.split(",");
-        if(splitInput.length != 2) {
-            throw new InputMismatchException("Please make sure input is in similar format to, 'Richmond Hill, CA'");
-        }
-        return splitInput;
+    public GeoLocationEntity getCurrentGeoLocation() {
+        return currentGeoLocation;
     }
 }

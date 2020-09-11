@@ -27,8 +27,7 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class HourlyWeatherService
-        extends AbstractService<GeoLocationEntity, List<HourlyInformationEntity>, GeoLocationEntity> {
+public class HourlyWeatherService extends AbstractService<GeoLocationEntity, List<HourlyInformationEntity>> {
 
 
     @Autowired
@@ -36,16 +35,6 @@ public class HourlyWeatherService
 
     private HourlyWeatherService(HourlyInformationRepository hourlyInformationRep) {
         this.hourlyInformationRepo = hourlyInformationRep;
-    }
-
-    @Override
-    public void callService(GeoLocationEntity geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
-        HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
-
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-
-        List<HourlyInformationEntity> listOfHourlyEntities = parseResponseBody(responseBody);
-        addHourlyInformationToRepository(listOfHourlyEntities);
     }
 
     @Override
@@ -74,6 +63,11 @@ public class HourlyWeatherService
                 .addQueryParameter("end_time", formatter.format(futureEndTime))
                 .addQueryParameter("fields", APIConstants.HOURLY_FIELDS)
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+    }
+
+    @Override
+    protected void storeEntityInChosenLocaion(List<HourlyInformationEntity> entity) {
+        addHourlyInformationToRepository(entity);
     }
 
     public List<HourlyInformationEntity> getListOfHourlyInformation() {

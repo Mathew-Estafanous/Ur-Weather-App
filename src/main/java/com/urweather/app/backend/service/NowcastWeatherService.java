@@ -16,18 +16,9 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class NowcastWeatherService extends AbstractService<GeoLocationEntity, NowcastWeatherEntity, GeoLocationEntity> {
+public class NowcastWeatherService extends AbstractService<GeoLocationEntity, NowcastWeatherEntity> {
 
     private static NowcastWeatherEntity currentNowcastInformation;
-
-    @Override
-    public void callService(GeoLocationEntity geoLocationObject) throws JsonSyntaxException, IOException {
-        HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocationObject);
-
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-
-        currentNowcastInformation = parseResponseBody(responseBody);
-    }
 
     @Override
     protected NowcastWeatherEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
@@ -54,6 +45,11 @@ public class NowcastWeatherService extends AbstractService<GeoLocationEntity, No
                 .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
                 .addQueryParameter("fields", APIConstants.NOWCAST_FIELDS)
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+    }
+
+    @Override
+    protected void storeEntityInChosenLocaion(NowcastWeatherEntity entity) {
+        currentNowcastInformation = entity;
     }
 
     public NowcastWeatherEntity getCurreNowcastObject() {

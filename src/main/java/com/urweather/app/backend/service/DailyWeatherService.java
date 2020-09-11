@@ -24,23 +24,13 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class DailyWeatherService extends AbstractService<GeoLocationEntity, List<DayInformationEntity>, GeoLocationEntity> {
+public class DailyWeatherService extends AbstractService<GeoLocationEntity, List<DayInformationEntity>> {
 
     @Autowired
     private DayInformationRepository dayInformationRepo;
 
     public DailyWeatherService(DayInformationRepository dayInformationRepo) {
         this.dayInformationRepo = dayInformationRepo;
-    }
-
-    @Override
-    public final void callService(GeoLocationEntity geoLocation) throws IOException {
-        HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
-
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-
-        List<DayInformationEntity> listOfDayEntities = parseResponseBody(responseBody);
-        addDailyWeatherEntityToRepository(listOfDayEntities);
     }
 
     @Override
@@ -65,6 +55,11 @@ public class DailyWeatherService extends AbstractService<GeoLocationEntity, List
                 .addQueryParameter("start_time", "now")
                 .addQueryParameter("fields", APIConstants.DAILY_FIELDS)
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+    }
+
+    @Override
+    protected void storeEntityInChosenLocaion(List<DayInformationEntity> entity) {
+        addDailyWeatherEntityToRepository(entity);
     }
 
     public List<DayInformationEntity> getListOfDailyWeatherEntities(int total) {

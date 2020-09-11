@@ -16,18 +16,9 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class DetailWeatherService extends AbstractService<GeoLocationEntity, DetailWeatherEntity, GeoLocationEntity> {
+public class DetailWeatherService extends AbstractService<GeoLocationEntity, DetailWeatherEntity> {
 
     private static DetailWeatherEntity currentDetailWeatherInformation;
-
-    @Override
-    public void callService(GeoLocationEntity geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
-        HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
-
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-
-        currentDetailWeatherInformation = parseResponseBody(responseBody);
-    }
 
     @Override
     protected DetailWeatherEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
@@ -54,6 +45,11 @@ public class DetailWeatherService extends AbstractService<GeoLocationEntity, Det
                 .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
                 .addQueryParameter("fields", APIConstants.DETAILS_FIELDS)
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
+    }
+
+    @Override
+    protected void storeEntityInChosenLocaion(DetailWeatherEntity entity) {
+        currentDetailWeatherInformation = entity;
     }
 
     public DetailWeatherEntity getDetailWeatherInformation() {
