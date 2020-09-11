@@ -2,7 +2,6 @@ package com.urweather.app.backend.service;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.InputMismatchException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
