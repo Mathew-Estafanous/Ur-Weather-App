@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.urweather.app.backend.entity.DayInformationEntity;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 import com.urweather.app.backend.repository.DayInformationRepository;
 import com.urweather.app.helpers.ServicesConstants;
 import com.urweather.app.helpers.APIConstants;
@@ -24,7 +24,7 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class DailyWeatherService extends AbstractService<GeoLocationObject, List<DayInformationEntity>, GeoLocationObject> {
+public class DailyWeatherService extends AbstractService<GeoLocationEntity, List<DayInformationEntity>, GeoLocationEntity> {
 
     @Autowired
     private DayInformationRepository dayInformationRepo;
@@ -34,7 +34,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
     }
 
     @Override
-    public final void callService(GeoLocationObject geoLocation) throws IOException {
+    public final void callService(GeoLocationEntity geoLocation) throws IOException {
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
 
         ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
@@ -55,7 +55,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationObject, List
     }
 
     @Override
-    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationEntity geoLocation) {
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
                 .addPathSegment(APIConstants.VERSION)
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("daily")

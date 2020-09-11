@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 
 import com.google.gson.JsonSyntaxException;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 import com.urweather.app.backend.service.AbstractService;
 import com.urweather.app.backend.service.DailyWeatherService;
 import com.urweather.app.backend.service.DetailWeatherService;
@@ -74,7 +74,7 @@ public class NavigationView extends Header {
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            GeoLocationObject geoLocation = callGeoLocationService(searchField.getValue());
+            GeoLocationEntity geoLocation = callGeoLocationService(searchField.getValue());
             if (geoLocation != null) {
                 boolean didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
                 boolean didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
@@ -92,7 +92,7 @@ public class NavigationView extends Header {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private boolean callWeatherService(AbstractService service, GeoLocationObject geoLocation) {
+    private boolean callWeatherService(AbstractService service, GeoLocationEntity geoLocation) {
         try {
             service.callService(geoLocation);
             return true;
@@ -102,10 +102,10 @@ public class NavigationView extends Header {
 		}
     }
 
-    private GeoLocationObject callGeoLocationService(String location) {
+    private GeoLocationEntity callGeoLocationService(String location) {
         try {
             geoLocationService.callService(location);
-            GeoLocationObject geoLocation = geoLocationService.getCurrentGeoLocation();
+            GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
             return geoLocation;
         } catch (Exception e) {
             Notification.show(e.toString());

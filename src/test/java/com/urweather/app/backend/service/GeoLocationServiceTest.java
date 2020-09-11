@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 
 import com.google.gson.JsonSyntaxException;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,29 +22,22 @@ public class GeoLocationServiceTest {
 
     @Test
     public void properGeoLocationObjectCreated() {
-        GeoLocationObject testGeoLocationObj = new GeoLocationObject();
-        testGeoLocationObj.setCountry("Canada");
-        testGeoLocationObj.setCountryCode("CA");
-        testGeoLocationObj.setLatitude(43.8849);
-        testGeoLocationObj.setLongitude(-79.4304);
-        testGeoLocationObj.setName("Richmond Hill");
-
-        GeoLocationObject receviedObject = new GeoLocationObject();
+        GeoLocationEntity receviedObject = new GeoLocationEntity();
         try {
             geoLocationService.callService("Richmond Hill, CA");
             receviedObject = geoLocationService.getCurrentGeoLocation();
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
             Assert.fail(e.getMessage());
         }
-        Assert.assertTrue(twoGeoLocationsAreEqual(testGeoLocationObj, receviedObject));
+        Assert.assertTrue(geoLocationServiceWorks(receviedObject));
     }
 
 
-    private boolean twoGeoLocationsAreEqual(GeoLocationObject first, GeoLocationObject second) {
-        return first.getCountry().equals(second.getCountry()) &&
-                first.getCountryCode().equals(second.getCountryCode()) &&
-                first.getLatitude() == second.getLatitude() &&
-                first.getLongitude() == second.getLongitude() &&
-                first.getName().equals(second.getName());
+    private boolean geoLocationServiceWorks(GeoLocationEntity first) {
+        return first.getCountry().equals("Canada") &&
+                first.getCountryCode().equals("CA") &&
+                first.getLatitude() == 43.8849 &&
+                first.getLongitude() == -79.4304 &&
+                first.getName().equals("Richmond Hill");
     }
 }

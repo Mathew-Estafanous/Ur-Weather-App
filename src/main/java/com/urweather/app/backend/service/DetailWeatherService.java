@@ -5,8 +5,8 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.urweather.app.backend.entity.DetailWeatherObject;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.DetailWeatherEntity;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 import com.urweather.app.helpers.APIConstants;
 import com.urweather.app.helpers.ServicesConstants;
 
@@ -16,12 +16,12 @@ import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 
 @Service
-public class DetailWeatherService extends AbstractService<GeoLocationObject, DetailWeatherObject, GeoLocationObject> {
+public class DetailWeatherService extends AbstractService<GeoLocationEntity, DetailWeatherEntity, GeoLocationEntity> {
 
-    private static DetailWeatherObject currentDetailWeatherInformation;
+    private static DetailWeatherEntity currentDetailWeatherInformation;
 
     @Override
-    public void callService(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
+    public void callService(GeoLocationEntity geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
 
         ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
@@ -30,7 +30,7 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
     }
 
     @Override
-    protected DetailWeatherObject parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    protected DetailWeatherEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
         Gson gson = new Gson();
         JsonObject responseJsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
         JsonObject detailInfoObject = new JsonObject();
@@ -42,11 +42,11 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
         detailInfoObject.add(ServicesConstants.HUMIDITY, getValueFromElement(responseJsonObject.get(ServicesConstants.HUMIDITY)));
         detailInfoObject.add(ServicesConstants.PRESSURE, getValueFromElement(responseJsonObject.get(ServicesConstants.PRESSURE)));
         detailInfoObject.add(ServicesConstants.VISIBILITY, getValueFromElement(responseJsonObject.get(ServicesConstants.VISIBILITY)));
-        return gson.fromJson(detailInfoObject.toString(), DetailWeatherObject.class);
+        return gson.fromJson(detailInfoObject.toString(), DetailWeatherEntity.class);
     }
 
     @Override
-    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationEntity geoLocation) {
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
                 .addPathSegment(APIConstants.VERSION).addPathSegment("weather")
                 .addPathSegment("realtime").addQueryParameter(ServicesConstants.LAT, Double.toString(geoLocation.getLatitude()))
@@ -56,7 +56,7 @@ public class DetailWeatherService extends AbstractService<GeoLocationObject, Det
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
 
-    public DetailWeatherObject getDetailWeatherInformation() {
+    public DetailWeatherEntity getDetailWeatherInformation() {
         return currentDetailWeatherInformation;
     }
 }

@@ -1,6 +1,6 @@
 package com.urweather.app.ui.views;
 
-import com.urweather.app.backend.entity.NowcastObject;
+import com.urweather.app.backend.entity.NowcastWeatherEntity;
 import com.urweather.app.backend.service.NowcastWeatherService;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
@@ -33,7 +33,7 @@ public class CurrentTemperatureView extends VerticalLayout {
     }
 
     public void updateDayTemperatureView() {
-        NowcastObject nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
         currentTemp.setText(Integer.toString((int) Math.round(nowcastInformation.getTemperature())) + DEGREE);
     }
 }

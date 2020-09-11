@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.urweather.app.backend.entity.GeoLocationObject;
+import com.urweather.app.backend.entity.GeoLocationEntity;
 import com.urweather.app.backend.entity.HourlyInformationEntity;
 import com.urweather.app.backend.repository.HourlyInformationRepository;
 import com.urweather.app.helpers.APIConstants;
@@ -28,7 +28,7 @@ import okhttp3.ResponseBody;
 
 @Service
 public class HourlyWeatherService
-        extends AbstractService<GeoLocationObject, List<HourlyInformationEntity>, GeoLocationObject> {
+        extends AbstractService<GeoLocationEntity, List<HourlyInformationEntity>, GeoLocationEntity> {
 
 
     @Autowired
@@ -39,7 +39,7 @@ public class HourlyWeatherService
     }
 
     @Override
-    public void callService(GeoLocationObject geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
+    public void callService(GeoLocationEntity geoLocation) throws JsonSyntaxException, IOException, NullPointerException {
         HttpUrl.Builder urlBuilder = createUrlBuilder(geoLocation);
 
         ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
@@ -59,7 +59,7 @@ public class HourlyWeatherService
     }
 
     @Override
-    protected HttpUrl.Builder createUrlBuilder(GeoLocationObject geoLocation) {
+    protected HttpUrl.Builder createUrlBuilder(GeoLocationEntity geoLocation) {
         Date futureEndTime = DateUtils.addHours(new Date(), 5);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
