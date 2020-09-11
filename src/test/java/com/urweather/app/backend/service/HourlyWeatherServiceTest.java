@@ -40,7 +40,7 @@ public class HourlyWeatherServiceTest {
     public void createGeoLocationAndCallHourlyService() {
         GeoLocationEntity geoLocationObj = new GeoLocationEntity();
         try {
-            geoLocationService.callService("Richmond Hill, CA");
+            geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
             geoLocationObj = geoLocationService.getCurrentGeoLocation();
             hourlyWeatherService.callService(geoLocationObj);
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
