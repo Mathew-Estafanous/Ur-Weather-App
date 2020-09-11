@@ -10,16 +10,25 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.HttpUrl.Builder;
 
 import static com.urweather.app.helpers.ServicesConstants.VALUE;
 
-public abstract class AbstractService<T, E, G> {
+public abstract class AbstractService<T, E> {
 
-    abstract public void callService(T type) throws JsonSyntaxException, IOException, NullPointerException;
+    abstract protected void storeEntityInChosenLocaion(E entity);
 
     abstract protected E parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException;
 
-    abstract protected HttpUrl.Builder createUrlBuilder(G object);
+    abstract protected HttpUrl.Builder createUrlBuilder(T object);
+
+    public void callService(T type) throws JsonSyntaxException, IOException, NullPointerException {
+        Builder urlBuilder = createUrlBuilder(type);
+        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
+        E parsedEntity = parseResponseBody(responseBody);
+
+        storeEntityInChosenLocaion(parsedEntity);
+    }
 
     protected JsonElement getValueFromElement(JsonElement element) {
         return element.getAsJsonObject().get(VALUE);

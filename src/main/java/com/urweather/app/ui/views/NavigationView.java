@@ -1,6 +1,8 @@
 package com.urweather.app.ui.views;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
+
 import javax.annotation.PostConstruct;
 
 import com.google.gson.JsonSyntaxException;
@@ -74,7 +76,8 @@ public class NavigationView extends Header {
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            GeoLocationEntity geoLocation = callGeoLocationService(searchField.getValue());
+            String[] geoLocationInfo = splitStringIntoCityAndCountry(searchField.getValue());
+            GeoLocationEntity geoLocation = callGeoLocationService(geoLocationInfo);
             if (geoLocation != null) {
                 boolean didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
                 boolean didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
@@ -102,15 +105,22 @@ public class NavigationView extends Header {
 		}
     }
 
-    private GeoLocationEntity callGeoLocationService(String location) {
+    private GeoLocationEntity callGeoLocationService(String[] location) {
         try {
             geoLocationService.callService(location);
-            GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
-            return geoLocation;
+            return geoLocationService.getCurrentGeoLocation();
         } catch (Exception e) {
             Notification.show(e.toString());
             return null;
         }
+    }
+
+    private String[] splitStringIntoCityAndCountry(String userInput) throws InputMismatchException {
+        String[] splitInput = userInput.split(",");
+        if(splitInput.length != 2) {
+            throw new InputMismatchException("Please make sure input is in similar format to, 'Richmond Hill, CA'");
+        }
+        return splitInput;
     }
 
     public Registration addTodayUpdatedListener(ComponentEventListener<UpdateTodayWeatherEvent> listener) {

@@ -39,7 +39,7 @@ public class DailyWeatherServiceTest {
     public void creatGeoLocationAndCallDailyService() {
         GeoLocationEntity geoLocationObj = new GeoLocationEntity();
         try {
-            geoLocationService.callService("Richmond Hill, CA");
+            geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
             geoLocationObj = geoLocationService.getCurrentGeoLocation();
             dailyWeatherService.callService(geoLocationObj);
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
