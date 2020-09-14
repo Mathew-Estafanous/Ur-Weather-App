@@ -33,7 +33,7 @@ public class CurrentTemperatureView extends VerticalLayout {
     }
 
     public void updateDayTemperatureView() {
-        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
         currentTemp.setText(Integer.toString((int) Math.round(nowcastInformation.getTemperature())) + DEGREE);
     }
 }
