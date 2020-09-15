@@ -1,10 +1,10 @@
 package com.urweather.app.backend.service;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
 
 import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationEntity;
+import com.urweather.app.backend.entity.NowcastWeatherEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,24 +16,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DailyWeatherServiceTest {
+public class NowcastWeatherServiceTest {
 
     @Autowired
-    private DailyWeatherService dailyWeatherService;
+    private NowcastWeatherService nowcastWeatherService;
 
     @Test
-    public void dailyWeatherRepositoryIsFilledProperlly() {
-        int dailyWeatherCount = dailyWeatherService.getListOfDailyWeatherEntities(6).size();
-        Assert.assertNotEquals(0, dailyWeatherCount);
+    public void getNowcastWeatherGetsNonNullObject() {
+        NowcastWeatherEntity nowcastWeatherEntity = nowcastWeatherService.getCurrentNowcastObject();
+        Assert.assertNotNull(nowcastWeatherEntity);
     }
 
     @Before
     public void callTheWeatherService() {
         try {
             GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
-            dailyWeatherService.callService(geoLocationObj);
-        } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
-            Assert.fail(e.getMessage());
+            nowcastWeatherService.callService(geoLocationObj);
+        } catch (JsonSyntaxException | NullPointerException | IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -19,10 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class HourlyWeatherServiceTest {
 
     @Autowired
-    private GeoLocationService geoLocationService;
-    @Autowired
     private HourlyWeatherService hourlyWeatherService;
-
 
     @Test
     public void hourlyWeatherFilledProperly() {
@@ -30,21 +27,24 @@ public class HourlyWeatherServiceTest {
         Assert.assertNotEquals(0, hourlyWeatherCount);
     }
 
-    @Test(expected = Exception.class)
-    public void failedWhenGivenNullObjects() throws Exception {
-        hourlyWeatherService.callService(null);
-        hourlyWeatherService.callService(new GeoLocationEntity());
-    }
-
     @Before
-    public void createGeoLocationAndCallHourlyService() {
-        GeoLocationEntity geoLocationObj = new GeoLocationEntity();
+    public void callTheWeatherService() {
         try {
-            geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
-            geoLocationObj = geoLocationService.getCurrentGeoLocation();
+            GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
             hourlyWeatherService.callService(geoLocationObj);
         } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
             Assert.fail(e.getMessage());
         }
+    }
+
+    private GeoLocationEntity createMockGeoLocaionObj() {
+        GeoLocationEntity geoLocationObj = new GeoLocationEntity();
+        geoLocationObj.setCity("Richmond Hill");
+        geoLocationObj.setCountry("Canada");
+        geoLocationObj.setCountryCode("CA");
+        geoLocationObj.setLatitude(43.8828);
+        geoLocationObj.setLongitude(-79.4403);
+        geoLocationObj.setName("Richmond Hill");
+        return geoLocationObj;
     }
 }

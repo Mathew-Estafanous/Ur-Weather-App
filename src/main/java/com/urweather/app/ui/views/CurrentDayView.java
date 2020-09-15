@@ -49,7 +49,7 @@ public class CurrentDayView extends VerticalLayout {
 
     public void updateDayViewInformation() {
         GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
-        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurreNowcastObject();
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
 
         cityLocation.setText(geoLocation.getCity());
 

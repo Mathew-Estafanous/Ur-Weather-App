@@ -52,7 +52,7 @@ public class NowcastWeatherService extends AbstractService<GeoLocationEntity, No
         currentNowcastInformation = entity;
     }
 
-    public NowcastWeatherEntity getCurreNowcastObject() {
+    public NowcastWeatherEntity getCurrentNowcastObject() {
         return currentNowcastInformation;
     }
 }
