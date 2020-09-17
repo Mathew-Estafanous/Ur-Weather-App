@@ -23,7 +23,7 @@ public class HourlyWeatherServiceTest {
 
     @Test
     public void hourlyWeatherFilledProperly() {
-        int hourlyWeatherCount = hourlyWeatherService.getListOfHourlyInformation().size();
+        int hourlyWeatherCount = hourlyWeatherService.getListOfHourlyInformation(12).size();
         Assert.assertNotEquals(0, hourlyWeatherCount);
     }
 

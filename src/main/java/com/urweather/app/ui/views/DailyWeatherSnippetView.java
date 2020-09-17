@@ -29,7 +29,7 @@ public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     @Override
     public void updateWeatherInformation() {
-        List<DayInformationEntity> listOfDays = dailyWeatherService.getListOfDailyWeatherEntities(6);
+        List<DayInformationEntity> listOfDays = dailyWeatherService.getListOfDailyWeatherEntities(12);
         deleteAllCurrentSnippets();
 
         listOfDays.forEach(day -> {

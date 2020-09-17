@@ -31,7 +31,7 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
 
     @Override
     public void updateWeatherInformation() {
-        List<HourlyInformationEntity> listOfHourlyInformation = hourlyWeatherService.getListOfHourlyInformation();
+        List<HourlyInformationEntity> listOfHourlyInformation = hourlyWeatherService.getListOfHourlyInformation(12);
         deleteAllCurrentSnippets();
 
         listOfHourlyInformation.forEach(hour -> {

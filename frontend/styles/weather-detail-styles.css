@@ -6,6 +6,7 @@
 
 
 .hourly-tab, .daily-tab, .details-tab {
+    --lumo-primary-color: white;
     font-size: large;
     margin: 0px 20px;
     background-color: rgb(000, 000, 000, 0.0);
@@ -24,18 +25,37 @@
 }
 
 /* Hourly Weather View */
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.199);
+    border-radius: 20px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 20px;
+}
+
+
 .weather-snip-layout {
     padding-top: 0px;
     padding-bottom: 0px;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
 }
 
 .weather-snip-div {
     margin-top: 0px;
     display: flex;
     justify-content: space-between;
+    overflow-x: auto;
 }
 
 .time-snip {
+    white-space: nowrap;
     font-size: xx-large;
     font-weight: lighter;
     width: 100%;
@@ -45,7 +65,7 @@
 
 .weather-icon-snip {
     margin-top: 0px;
-    width: 35%;
+    width: 75%;
     display: block;
     margin-left: auto;
     margin-right: auto;
