@@ -23,7 +23,7 @@ public class DailyWeatherServiceTest {
 
     @Test
     public void dailyWeatherRepositoryIsFilledProperlly() {
-        int dailyWeatherCount = dailyWeatherService.getListOfDailyWeatherEntities(6).size();
+        int dailyWeatherCount = dailyWeatherService.getListOfDailyWeatherEntities(12).size();
         Assert.assertNotEquals(0, dailyWeatherCount);
     }
 

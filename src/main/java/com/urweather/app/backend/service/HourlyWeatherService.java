@@ -49,10 +49,6 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
 
     @Override
     protected HttpUrl.Builder createUrlBuilder(GeoLocationEntity geoLocation) {
-        Date futureEndTime = DateUtils.addHours(new Date(), 5);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         return new HttpUrl.Builder().scheme(APIConstants.SCHEME).host(APIConstants.CLIMACELL_API_URL)
                 .addPathSegment(APIConstants.VERSION)
                 .addPathSegment("weather").addPathSegment("forecast").addPathSegment("hourly")
@@ -60,7 +56,6 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
                 .addQueryParameter(ServicesConstants.LON, Double.toString(geoLocation.getLongitude()))
                 .addQueryParameter(APIConstants.UNIT_SYSTEM, APIConstants.SI)
                 .addQueryParameter("start_time", "now")
-                .addQueryParameter("end_time", formatter.format(futureEndTime))
                 .addQueryParameter("fields", APIConstants.HOURLY_FIELDS)
                 .addQueryParameter("apikey", APIConstants.CLIMACELL_API_KEY);
     }
@@ -70,8 +65,10 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
         addHourlyInformationToRepository(entity);
     }
 
-    public List<HourlyInformationEntity> getListOfHourlyInformation() {
-        return hourlyInformationRepo.findAll();
+    public List<HourlyInformationEntity> getListOfHourlyInformation(int total) {
+        return hourlyInformationRepo.findAll().stream()
+                    .limit(total)
+                    .collect(Collectors.toList());
     }
 
     private void addHourlyInformationToRepository(List<HourlyInformationEntity> listOfHourEntities) {
