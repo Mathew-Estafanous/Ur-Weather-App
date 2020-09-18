@@ -1,4 +1,4 @@
-package com.urweather.app.ui.views;
+package com.urweather.app.ui.views.differentweathertabviews;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +17,7 @@ import static com.urweather.app.helpers.ConstantSymbols.DEGREE;
 
 @Component
 @UIScope
-public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
+public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView<List<HourlyInformationEntity>> {
 
     private HourlyWeatherService hourlyWeatherService;
 
@@ -30,8 +30,7 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
 
 
     @Override
-    public void updateWeatherInformation() {
-        List<HourlyInformationEntity> listOfHourlyInformation = hourlyWeatherService.getListOfHourlyInformation(12);
+    protected void updateWeatherInformation(List<HourlyInformationEntity> listOfHourlyInformation) {
         deleteAllCurrentSnippets();
 
         listOfHourlyInformation.forEach(hour -> {
@@ -50,6 +49,12 @@ public class HourlyWeatherSnippetView extends AbstractWeatherSnippetView {
                                 convertedCurrentTime, convertedSunriseTime, convertedSunsetTime);
             addWeatherSnippet(time, imageSrc, temp);
         });
+    }
+
+    @Override
+    public void updateWeatherView() {
+        List<HourlyInformationEntity> listOfHourlyInformation = hourlyWeatherService.getListOfHourlyInformation(12);
+        updateWeatherInformation(listOfHourlyInformation);
     }
 
 }
