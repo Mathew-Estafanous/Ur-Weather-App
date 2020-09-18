@@ -4,7 +4,7 @@
     <img src="src\main\resources\META-INF\resources\frontend\weather_icons\PNG\256\day_clear.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Ur-Weather App</h3>
+  <h1 align="center">Ur-Weather App</h1>
 
   <p align="center">
     Simple and minimilistic weather app that displays relevant weather information!
@@ -33,8 +33,9 @@
 * [License](#license)
 * [Contact](#contact)
 
+
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# About The Project
 
 [![Ur-Weather App][product-screenshot]](https://localhost:8080)
 
@@ -43,7 +44,7 @@ This project was designed for two main purposes. One being the chance to learn t
 These two major concepts were used to develop a web application that displays relevant weather information for the user. Hourly and Daily weather information is also displayed at the bottom of the website. For extra detail about the weather, you can also open the Details tab.
 
 
-### Built With
+## Built With
 
 * [Vaadin](https://vaadin.com/)
 * [Spring Boot](https://spring.io/)
@@ -53,25 +54,25 @@ These two major concepts were used to develop a web application that displays re
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+# Getting Started
 
 The following are steps for users who wish to get a local copy of the web application running on their machine.
 
-### Prerequisites
+## Prerequisites
 
 The following needs to be installed on your machine for the application to properly work.
 * [Maven](https://maven.apache.org/download.cgi)
     * [Download Tutorial](https://howtodoinjava.com/maven/how-to-install-maven-on-windows/)
 
-### Installation
+## Installation
 
 1. Go to prefered directory
-``sh
+```sh
 cd FakeFolder/NotRealDirectory/
-``
+```
 2. Clone the repo
 ```sh
-https://github.com/Mathew-Estafanous/Ur-Weather-App.git
+git clone https://github.com/Mathew-Estafanous/Ur-Weather-App.git
 ```
 3. Run app using maven
 ```sh
@@ -80,7 +81,7 @@ mvn spring-boot:run
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+# Usage
 
 The program is very simple and easy to use. Once you open the website page, go to the top navigation bar and input the city you would like to get weather information for.
 
@@ -90,7 +91,7 @@ The format required is as follows:
 Once you input and click the search button, you can now look through all the displayed information and tab through the detail, hourly and daily weather figures.
 
 <!-- CONTRIBUTING -->
-## Contributing
+# Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -102,13 +103,13 @@ Contributions are what make the open source community such an amazing place to b
 
 
 <!-- LICENSE -->
-## License
+# License
 
 This project is Unlicensed and is free to be used! See `LICENSE` for more information.
 
 
 <!-- CONTACT -->
-## Contact
+# Contact
 
 Mathew Estafanous - mathewestafanous13@gmail.com
 
@@ -116,5 +117,5 @@ Project Link: [https://github.com/Mathew-Estafanous/Ur-Weather-App](https://gith
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[product-screenshot]: src\main\resources\META-INF\resources\readme\ur-weatherapp.PNG
+[product-screenshot]: src/main/resources/META-INF/resources/readme/ur-weatherapp.PNG
 
