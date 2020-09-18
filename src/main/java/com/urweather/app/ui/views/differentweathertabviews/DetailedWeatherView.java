@@ -1,4 +1,4 @@
-package com.urweather.app.ui.views;
+package com.urweather.app.ui.views.differentweathertabviews;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +7,7 @@ import com.urweather.app.backend.entity.DetailWeatherEntity;
 import com.urweather.app.backend.service.DetailWeatherService;
 import com.urweather.app.helpers.ConstantSymbols;
 import com.urweather.app.helpers.TimezoneConvertorHelper;
+import com.urweather.app.ui.views.IUpdatable;
 import com.urweather.app.ui.views.reusables.DetailsSnippetLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-public class DetailedWeatherView extends HorizontalLayout {
+public class DetailedWeatherView extends HorizontalLayout implements IUpdatable {
     private static final long serialVersionUID = 1L;
 
     private DetailWeatherService detailWeatherService;
@@ -42,8 +43,7 @@ public class DetailedWeatherView extends HorizontalLayout {
         add(mainDiv);
     }
 
-    public void updateDetailWeatherInformation() {
-        DetailWeatherEntity detailedWeather = detailWeatherService.getDetailWeatherInformation();
+    private void updateDetailWeatherInformation(DetailWeatherEntity detailedWeather) {
         ZonedDateTime convertedSunrise = TimezoneConvertorHelper.convertDateToLocalTimezone(detailedWeather.getLatitude(),
                                 detailedWeather.getLongitude(), detailedWeather.getSunrise());
         ZonedDateTime convertedSunset = TimezoneConvertorHelper.convertDateToLocalTimezone(detailedWeather.getLatitude(),
@@ -55,5 +55,11 @@ public class DetailedWeatherView extends HorizontalLayout {
         humidity.changeValue(Long.toString(Math.round(detailedWeather.getHumidityPercent())));
         visibilty.changeValue(Long.toString(Math.round(detailedWeather.getVisibility())));
         pressure.changeValue(Long.toString(Math.round(detailedWeather.getPressure())));
+    }
+
+    @Override
+    public void updateWeatherView() {
+        DetailWeatherEntity detailedWeather = detailWeatherService.getDetailWeatherInformation();
+        updateDetailWeatherInformation(detailedWeather);
     }
 }

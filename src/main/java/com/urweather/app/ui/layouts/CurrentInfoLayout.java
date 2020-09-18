@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 public class CurrentInfoLayout extends HorizontalLayout {
     private static final long serialVersionUID = 1L;
 
-    private NavigationView searchBar;
-    private CurrentDayView currentDayView;
-    private CurrentTemperatureView currentTemperatureView;
+    private final NavigationView searchBar;
+    private final CurrentDayView currentDayView;
+    private final CurrentTemperatureView currentTemperatureView;
 
     @Autowired
     public CurrentInfoLayout(CurrentDayView currentDayView, CurrentTemperatureView currentTemperatureView,
@@ -32,18 +32,17 @@ public class CurrentInfoLayout extends HorizontalLayout {
 
         addListenerForViews();
         add(currentDayView, currentTemperatureView);
-        startUpUIWithBaseCity();
+        callWeatherViewUpdates();
     }
 
     private void addListenerForViews() {
         searchBar.addTodayUpdatedListener(e -> {
-            currentDayView.updateDayViewInformation();
-            currentTemperatureView.updateDayTemperatureView();
+            callWeatherViewUpdates();
         });
     }
 
-    private void startUpUIWithBaseCity() {
-        currentDayView.updateDayViewInformation();
-        currentTemperatureView.updateDayTemperatureView();
+    private void callWeatherViewUpdates() {
+        currentDayView.updateWeatherView();
+        currentTemperatureView.updateWeatherView();
     }
 }

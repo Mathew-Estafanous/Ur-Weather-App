@@ -3,9 +3,9 @@ package com.urweather.app.ui.layouts;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.urweather.app.ui.views.DailyWeatherSnippetView;
-import com.urweather.app.ui.views.DetailedWeatherView;
-import com.urweather.app.ui.views.HourlyWeatherSnippetView;
+import com.urweather.app.ui.views.differentweathertabviews.DailyWeatherSnippetView;
+import com.urweather.app.ui.views.differentweathertabviews.DetailedWeatherView;
+import com.urweather.app.ui.views.differentweathertabviews.HourlyWeatherSnippetView;
 import com.urweather.app.ui.views.NavigationView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -31,9 +31,9 @@ public class MoreDetailInfoLayout extends VerticalLayout {
 
     private Div listOfViews = new Div();
 
-    private HourlyWeatherSnippetView hourlyWeatherView;
-    private DailyWeatherSnippetView dailyWeatherView;
-    private DetailedWeatherView detailedWeatherView;
+    private final HourlyWeatherSnippetView hourlyWeatherView;
+    private final DailyWeatherSnippetView dailyWeatherView;
+    private final DetailedWeatherView detailedWeatherView;
 
     @Autowired
     public MoreDetailInfoLayout(NavigationView searchBar, DailyWeatherSnippetView dailyWeatherView,
@@ -78,9 +78,9 @@ public class MoreDetailInfoLayout extends VerticalLayout {
     }
 
     private void startUpUIWithBaseCity() {
-        hourlyWeatherView.updateWeatherInformation();
-        dailyWeatherView.updateWeatherInformation();
-        detailedWeatherView.updateDetailWeatherInformation();
+        hourlyWeatherView.updateWeatherView();
+        dailyWeatherView.updateWeatherView();
+        detailedWeatherView.updateWeatherView();
     }
 
     private void addListenerForEachView() {

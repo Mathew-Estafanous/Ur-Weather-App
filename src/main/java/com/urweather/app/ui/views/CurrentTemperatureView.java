@@ -15,7 +15,7 @@ import static com.urweather.app.helpers.ConstantSymbols.DEGREE;
 @Component
 @UIScope
 @CssImport("./styles/current-info-styles.css")
-public class CurrentTemperatureView extends VerticalLayout {
+public class CurrentTemperatureView extends VerticalLayout implements IUpdatable {
     private static final long serialVersionUID = 1L;
 
     private NowcastWeatherService nowcastWeatherService;
@@ -32,8 +32,13 @@ public class CurrentTemperatureView extends VerticalLayout {
         add(currentTemp);
     }
 
-    public void updateDayTemperatureView() {
-        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
+    public void updateDayTemperatureView(NowcastWeatherEntity nowcastInformation) {
         currentTemp.setText(Integer.toString((int) Math.round(nowcastInformation.getTemperature())) + DEGREE);
+    }
+
+    @Override
+    public void updateWeatherView() {
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
+        updateDayTemperatureView(nowcastInformation);
     }
 }

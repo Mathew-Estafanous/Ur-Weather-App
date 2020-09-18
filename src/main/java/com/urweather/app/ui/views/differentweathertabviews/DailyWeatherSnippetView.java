@@ -1,4 +1,4 @@
-package com.urweather.app.ui.views;
+package com.urweather.app.ui.views.differentweathertabviews;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import static com.urweather.app.helpers.ConstantSymbols.DEGREE;
 @Component
 @UIScope
-public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
+public class DailyWeatherSnippetView extends AbstractWeatherSnippetView<List<DayInformationEntity>> {
 
     private DailyWeatherService dailyWeatherService;
 
@@ -28,8 +28,7 @@ public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
     }
 
     @Override
-    public void updateWeatherInformation() {
-        List<DayInformationEntity> listOfDays = dailyWeatherService.getListOfDailyWeatherEntities(12);
+    protected void updateWeatherInformation(List<DayInformationEntity> listOfDays) {
         deleteAllCurrentSnippets();
 
         listOfDays.forEach(day -> {
@@ -40,5 +39,11 @@ public class DailyWeatherSnippetView extends AbstractWeatherSnippetView {
             String imageSrc = ImageIconHelper.getPathOfIconFromWeatherCode(day.getWeatherCode());
             addWeatherSnippet(time, imageSrc, temp);
         });
+    }
+
+    @Override
+    public void updateWeatherView() {
+        List<DayInformationEntity> listOfDays = dailyWeatherService.getListOfDailyWeatherEntities(12);
+        updateWeatherInformation(listOfDays);
     }
 }

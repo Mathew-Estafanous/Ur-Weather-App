@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 @UIScope
 @CssImport("./styles/current-info-styles.css")
-public class CurrentDayView extends VerticalLayout {
+public class CurrentDayView extends VerticalLayout implements IUpdatable {
     private static final long serialVersionUID = 1L;
 
     private NowcastWeatherService nowcastWeatherService;
@@ -47,12 +47,7 @@ public class CurrentDayView extends VerticalLayout {
         add(cityLocation, currentDate, weatherIcon);
     }
 
-    public void updateDayViewInformation() {
-        GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
-        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
-
-        cityLocation.setText(geoLocation.getCity());
-
+    public void updateDayViewInformation(GeoLocationEntity geoLocation, NowcastWeatherEntity nowcastInformation) {
         double latitude = nowcastInformation.getLatitude();
         double longitude = nowcastInformation.getLongitude();
         ZonedDateTime convertedZonedTime = TimezoneConvertorHelper.convertDateToLocalTimezone(latitude,
@@ -62,8 +57,16 @@ public class CurrentDayView extends VerticalLayout {
         ZonedDateTime convertedSunsetTime = TimezoneConvertorHelper.convertDateToLocalTimezone(latitude,
                                                 longitude, nowcastInformation.getSunset());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        cityLocation.setText(geoLocation.getCity());
         currentDate.setText(convertedZonedTime.format(formatter));
         weatherIcon.setSrc(ImageIconHelper.getPathOfIconFromWeatherCodeAndTime(nowcastInformation.getWeatherCode(),
                                 convertedZonedTime, convertedSunriseTime, convertedSunsetTime));
+    }
+
+    @Override
+    public void updateWeatherView() {
+        GeoLocationEntity geoLocation = geoLocationService.getCurrentGeoLocation();
+        NowcastWeatherEntity nowcastInformation = nowcastWeatherService.getCurrentNowcastObject();
+        updateDayViewInformation(geoLocation, nowcastInformation);
     }
 }
