@@ -2,11 +2,8 @@ package com.urweather.app.backend.service;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
@@ -19,7 +16,6 @@ import com.urweather.app.backend.repository.HourlyInformationRepository;
 import com.urweather.app.helpers.APIConstants;
 import com.urweather.app.helpers.ServicesConstants;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +29,7 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
     @Autowired
     private HourlyInformationRepository hourlyInformationRepo;
 
-    private HourlyWeatherService(HourlyInformationRepository hourlyInformationRep) {
+    public HourlyWeatherService(HourlyInformationRepository hourlyInformationRep) {
         this.hourlyInformationRepo = hourlyInformationRep;
     }
 

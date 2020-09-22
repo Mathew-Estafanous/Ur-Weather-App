@@ -1,9 +1,7 @@
 package com.urweather.app.backend.service;
 
-import java.io.IOException;
-import java.util.InputMismatchException;
+import java.util.concurrent.CompletableFuture;
 
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationEntity;
 
 import org.junit.Assert;
@@ -23,12 +21,10 @@ public class GeoLocationServiceTest {
     @Test
     public void properGeoLocationObjectCreated() {
         GeoLocationEntity receviedObject = new GeoLocationEntity();
-        try {
-            geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
-            receviedObject = geoLocationService.getCurrentGeoLocation();
-        } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
-            Assert.fail(e.getMessage());
-        }
+        CompletableFuture<Boolean> result = geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
+        CompletableFuture.allOf(result).join();
+
+        receviedObject = geoLocationService.getCurrentGeoLocation();
         Assert.assertTrue(geoLocationServiceWorks(receviedObject));
     }
 

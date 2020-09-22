@@ -1,9 +1,7 @@
 package com.urweather.app.backend.service;
 
-import java.io.IOException;
-import java.util.InputMismatchException;
+import java.util.concurrent.CompletableFuture;
 
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationEntity;
 
 import org.junit.Assert;
@@ -29,12 +27,9 @@ public class HourlyWeatherServiceTest {
 
     @Before
     public void callTheWeatherService() {
-        try {
-            GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
-            hourlyWeatherService.callService(geoLocationObj);
-        } catch (JsonSyntaxException | InputMismatchException | IndexOutOfBoundsException | IOException e) {
-            Assert.fail(e.getMessage());
-        }
+        GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
+        CompletableFuture<Boolean> result = hourlyWeatherService.callService(geoLocationObj);
+        CompletableFuture.allOf(result).join();
     }
 
     private GeoLocationEntity createMockGeoLocaionObj() {

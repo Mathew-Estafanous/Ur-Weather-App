@@ -1,9 +1,12 @@
 package com.urweather.app.backend.service;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+
+import org.springframework.scheduling.annotation.Async;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -22,12 +25,20 @@ public abstract class AbstractService<T, E> {
 
     abstract protected HttpUrl.Builder createUrlBuilder(T object);
 
-    public void callService(T type) throws JsonSyntaxException, IOException, NullPointerException {
+    @Async
+    public CompletableFuture<Boolean> callService(T type) {
         Builder urlBuilder = createUrlBuilder(type);
-        ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
-        E parsedEntity = parseResponseBody(responseBody);
+        E parsedEntity;
+        try {
+            ResponseBody  responseBody = callRequestAndReturnResponseBody(urlBuilder);
+            parsedEntity = parseResponseBody(responseBody);
+        } catch (IOException | JsonSyntaxException e) {
+            e.printStackTrace();
+            return CompletableFuture.completedFuture(false);
+        }
 
         storeEntityInChosenLocaion(parsedEntity);
+        return CompletableFuture.completedFuture(true);
     }
 
     protected JsonElement getValueFromElement(JsonElement element) {
