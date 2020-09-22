@@ -1,8 +1,7 @@
 package com.urweather.app.backend.service;
 
-import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.DetailWeatherEntity;
 import com.urweather.app.backend.entity.GeoLocationEntity;
 
@@ -29,12 +28,9 @@ public class DetailWeatherServiceTest {
 
     @Before
     public void callTheWeatherService() {
-        try {
-            GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
-            detailWeatherService.callService(geoLocationObj);
-        } catch (JsonSyntaxException | NullPointerException | IOException e) {
-            e.printStackTrace();
-        }
+        GeoLocationEntity geoLocationObj = createMockGeoLocaionObj();
+        CompletableFuture<Boolean> result = detailWeatherService.callService(geoLocationObj);
+        CompletableFuture.allOf(result).join();
     }
 
     private GeoLocationEntity createMockGeoLocaionObj() {

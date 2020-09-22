@@ -1,11 +1,11 @@
 package com.urweather.app.ui.views;
 
-import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 
-import com.google.gson.JsonSyntaxException;
 import com.urweather.app.backend.entity.GeoLocationEntity;
 import com.urweather.app.backend.service.AbstractService;
 import com.urweather.app.backend.service.DailyWeatherService;
@@ -20,7 +20,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -70,49 +69,54 @@ public class NavigationView extends Header {
     }
 
     @PostConstruct
-    public void createFirstButtonEvent() {
+    public void startByCallingServiceSearch() {
         searchButton.click();
     }
 
     private void addButtonEvent() {
         searchButton.addClickListener(event -> {
-            String[] geoLocationInfo = splitStringIntoCityAndCountry(searchField.getValue());
-            GeoLocationEntity geoLocation = callGeoLocationService(geoLocationInfo);
+            String[] splitLocation = splitStringIntoCityAndCountry(searchField.getValue());
+            GeoLocationEntity geoLocation = callGeoLocationService(splitLocation);
             if (geoLocation != null) {
-                boolean didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
-                boolean didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
-                boolean didNowcastServiceWork = callWeatherService(nowcastWeatherService, geoLocation);
-                boolean didDetailServiceWork = callWeatherService(detailWeatherService, geoLocation);
+                boolean allWorked = callAllWeatherServices(geoLocation);
 
-                if (didNowcastServiceWork) {
+                if(allWorked) {
                     fireEvent(new UpdateTodayWeatherEvent(this));
-                }
-                if (didHourlyServiceWork && didDailyServiceWork && didDetailServiceWork) {
                     fireEvent(new UpdateWeatherEvent(this));
                 }
+
             }
         });
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private boolean callWeatherService(AbstractService service, GeoLocationEntity geoLocation) {
+    private boolean callAllWeatherServices(GeoLocationEntity geoLocation) {
+        CompletableFuture<Boolean> didDailyServiceWork = callWeatherService(dailyWeatherService, geoLocation);
+        CompletableFuture<Boolean> didHourlyServiceWork = callWeatherService(hourlyWeatherService, geoLocation);
+        CompletableFuture<Boolean> didNowcastServiceWork = callWeatherService(nowcastWeatherService, geoLocation);
+        CompletableFuture<Boolean> didDetailServiceWork = callWeatherService(detailWeatherService, geoLocation);
+
+        CompletableFuture.allOf(didDailyServiceWork, didHourlyServiceWork, didNowcastServiceWork, didDetailServiceWork)
+                .join();
+
         try {
-            service.callService(geoLocation);
-            return true;
-		} catch (JsonSyntaxException | NullPointerException | IOException e) {
-            Notification.show(e.getMessage());
+            return didDailyServiceWork.get() && didHourlyServiceWork.get() && didNowcastServiceWork.get()
+                    && didDailyServiceWork.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
             return false;
-		}
+        }
+    }
+
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private CompletableFuture<Boolean> callWeatherService(AbstractService service, GeoLocationEntity geoLocation) {
+        return service.callService(geoLocation);
     }
 
     private GeoLocationEntity callGeoLocationService(String[] location) {
-        try {
-            geoLocationService.callService(location);
-            return geoLocationService.getCurrentGeoLocation();
-        } catch (Exception e) {
-            Notification.show(e.toString());
-            return null;
-        }
+        CompletableFuture<Boolean> didGeoServiceWork = geoLocationService.callService(location);
+        CompletableFuture.allOf(didGeoServiceWork).join();
+        return geoLocationService.getCurrentGeoLocation();
     }
 
     private String[] splitStringIntoCityAndCountry(String userInput) throws InputMismatchException {
