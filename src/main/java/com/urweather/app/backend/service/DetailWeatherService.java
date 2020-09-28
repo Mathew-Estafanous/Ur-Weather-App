@@ -48,7 +48,7 @@ public class DetailWeatherService extends AbstractService<GeoLocationEntity, Det
     }
 
     @Override
-    protected void storeEntityInChosenLocaion(DetailWeatherEntity entity) {
+    protected void storeEntityInChosenLocation(DetailWeatherEntity entity) {
         currentDetailWeatherInformation = entity;
     }
 

@@ -19,7 +19,9 @@ import static com.urweather.app.helpers.ServicesConstants.VALUE;
 
 public abstract class AbstractService<T, E> {
 
-    abstract protected void storeEntityInChosenLocaion(E entity);
+    protected final static OkHttpClient client = new OkHttpClient();
+
+    abstract protected void storeEntityInChosenLocation(E entity);
 
     abstract protected E parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException;
 
@@ -30,14 +32,14 @@ public abstract class AbstractService<T, E> {
         Builder urlBuilder = createUrlBuilder(type);
         E parsedEntity;
         try {
-            ResponseBody  responseBody = callRequestAndReturnResponseBody(urlBuilder);
+            ResponseBody responseBody = callRequestAndReturnResponseBody(urlBuilder);
             parsedEntity = parseResponseBody(responseBody);
         } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
             return CompletableFuture.completedFuture(false);
         }
 
-        storeEntityInChosenLocaion(parsedEntity);
+        storeEntityInChosenLocation(parsedEntity);
         return CompletableFuture.completedFuture(true);
     }
 
@@ -46,8 +48,6 @@ public abstract class AbstractService<T, E> {
     }
 
     protected ResponseBody callRequestAndReturnResponseBody(HttpUrl.Builder urlBuilder) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder().url(urlBuilder.toString()).get().build();
 
         Response response = client.newCall(request).execute();

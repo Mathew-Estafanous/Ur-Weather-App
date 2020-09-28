@@ -1,6 +1,6 @@
 package com.urweather.app.ui.views;
 
-import java.util.InputMismatchException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -20,6 +20,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -33,11 +34,11 @@ import org.springframework.stereotype.Component;
 public class NavigationView extends Header {
     private static final long serialVersionUID = 1L;
 
-    private GeoLocationService geoLocationService;
-    private DailyWeatherService dailyWeatherService;
-    private HourlyWeatherService hourlyWeatherService;
-    private NowcastWeatherService nowcastWeatherService;
-    private DetailWeatherService detailWeatherService;
+    private final GeoLocationService geoLocationService;
+    private final DailyWeatherService dailyWeatherService;
+    private final HourlyWeatherService hourlyWeatherService;
+    private final NowcastWeatherService nowcastWeatherService;
+    private final DetailWeatherService detailWeatherService;
 
     TextField searchField = new TextField();
     Button searchButton = new Button("Search");
@@ -74,17 +75,20 @@ public class NavigationView extends Header {
     }
 
     private void addButtonEvent() {
-        searchButton.addClickListener(event -> {
-            String[] splitLocation = splitStringIntoCityAndCountry(searchField.getValue());
-            GeoLocationEntity geoLocation = callGeoLocationService(splitLocation);
-            if (geoLocation != null) {
-                boolean allWorked = callAllWeatherServices(geoLocation);
+        searchButton.addClickListener(event -> runSearchWhenClicked());
+    }
 
-                if(allWorked) {
-                    fireEvent(new UpdateTodayWeatherEvent(this));
-                    fireEvent(new UpdateWeatherEvent(this));
-                }
+    private void runSearchWhenClicked() {
+        Optional<String[]> splitLocation = splitStringIntoCityAndCountry(searchField.getValue());
+        if(!splitLocation.isPresent()) return;
 
+        Optional<GeoLocationEntity> geoLocation = callGeoLocationService(splitLocation.get());
+        geoLocation.ifPresent(location -> {
+            boolean allWorked = callAllWeatherServices(location);
+
+            if (allWorked) {
+                fireEvent(new UpdateTodayWeatherEvent(this));
+                fireEvent(new UpdateWeatherEvent(this));
             }
         });
     }
@@ -107,24 +111,24 @@ public class NavigationView extends Header {
         }
     }
 
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private CompletableFuture<Boolean> callWeatherService(AbstractService service, GeoLocationEntity geoLocation) {
         return service.callService(geoLocation);
     }
 
-    private GeoLocationEntity callGeoLocationService(String[] location) {
+    private Optional<GeoLocationEntity> callGeoLocationService(String[] location) {
         CompletableFuture<Boolean> didGeoServiceWork = geoLocationService.callService(location);
         CompletableFuture.allOf(didGeoServiceWork).join();
-        return geoLocationService.getCurrentGeoLocation();
+        return Optional.of(geoLocationService.getCurrentGeoLocation());
     }
 
-    private String[] splitStringIntoCityAndCountry(String userInput) throws InputMismatchException {
+    private Optional<String[]> splitStringIntoCityAndCountry(String userInput) {
         String[] splitInput = userInput.split(",");
         if(splitInput.length != 2) {
-            throw new InputMismatchException("Please make sure input is in similar format to, 'Richmond Hill, CA'");
+            Notification.show("Please make sure input is in similar format to, 'Richmond Hill, CA'");
+            return Optional.empty();
         }
-        return splitInput;
+        return Optional.of(splitInput);
     }
 
     public Registration addTodayUpdatedListener(ComponentEventListener<UpdateTodayWeatherEvent> listener) {
