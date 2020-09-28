@@ -48,7 +48,7 @@ public class NowcastWeatherService extends AbstractService<GeoLocationEntity, No
     }
 
     @Override
-    protected void storeEntityInChosenLocaion(NowcastWeatherEntity entity) {
+    protected void storeEntityInChosenLocation(NowcastWeatherEntity entity) {
         currentNowcastInformation = entity;
     }
 

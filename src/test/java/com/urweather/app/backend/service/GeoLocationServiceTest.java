@@ -20,11 +20,10 @@ public class GeoLocationServiceTest {
 
     @Test
     public void properGeoLocationObjectCreated() {
-        GeoLocationEntity receviedObject = new GeoLocationEntity();
-        CompletableFuture<Boolean> result = geoLocationService.callService(new String[]{"Richmond Hill", "CA"});
+        String[] splitGeoLocation = new String[] { "Richmond Hill", "CA" };
+        CompletableFuture<Boolean> result = geoLocationService.callService(splitGeoLocation);
         CompletableFuture.allOf(result).join();
-
-        receviedObject = geoLocationService.getCurrentGeoLocation();
+        GeoLocationEntity receviedObject = geoLocationService.getCurrentGeoLocation();
         Assert.assertTrue(geoLocationServiceWorks(receviedObject));
     }
 

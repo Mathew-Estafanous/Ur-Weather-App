@@ -12,7 +12,6 @@ import com.urweather.app.backend.entity.GeoLocationEntity;
 import org.springframework.stereotype.Service;
 
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -29,14 +28,16 @@ public class GeoLocationService extends AbstractService<String[], GeoLocationEnt
     private static GeoLocationEntity currentGeoLocation;
 
     @Override
-    protected GeoLocationEntity parseResponseBody(ResponseBody responseBody) throws JsonSyntaxException, IOException {
+    protected GeoLocationEntity parseResponseBody(ResponseBody responseBody)
+                throws JsonSyntaxException, IOException, IndexOutOfBoundsException {
         Gson gson = new Gson();
         Type jsonType = new TypeToken<JsonObject>() {}.getType();
         JsonObject jsonObj = gson.fromJson(responseBody.string(), jsonType);
 
         Type geoLocationType = new TypeToken<GeoLocationEntity>() {}.getType();
         try {
-            return gson.fromJson(jsonObj.get("data").getAsJsonArray().get(0).getAsJsonObject().toString(), geoLocationType);
+            String jsonGeoData = jsonObj.get("data").getAsJsonArray().get(0).getAsJsonObject().toString();
+            return gson.fromJson(jsonGeoData, geoLocationType);
         } catch (IndexOutOfBoundsException e) {
             throw new IndexOutOfBoundsException("No data found relating to that City/Country. Please review your input.");
         }
@@ -52,7 +53,6 @@ public class GeoLocationService extends AbstractService<String[], GeoLocationEnt
 
     @Override
     protected ResponseBody callRequestAndReturnResponseBody(Builder urlBuilder) throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(urlBuilder.toString())
                             .get()
                             .addHeader("x-rapidapi-host", GEOLOCATION_API_URL)
@@ -64,7 +64,7 @@ public class GeoLocationService extends AbstractService<String[], GeoLocationEnt
     }
 
     @Override
-    protected void storeEntityInChosenLocaion(GeoLocationEntity entity) {
+    protected void storeEntityInChosenLocation(GeoLocationEntity entity) {
         currentGeoLocation = entity;
     }
 

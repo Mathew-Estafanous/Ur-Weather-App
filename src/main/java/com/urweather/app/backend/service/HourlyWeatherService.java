@@ -27,7 +27,7 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
 
 
     @Autowired
-    private HourlyInformationRepository hourlyInformationRepo;
+    private final HourlyInformationRepository hourlyInformationRepo;
 
     public HourlyWeatherService(HourlyInformationRepository hourlyInformationRep) {
         this.hourlyInformationRepo = hourlyInformationRep;
@@ -39,7 +39,7 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
         Type hourlyType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedHourlyJsonObjects = gson.fromJson(responseBody.string(), hourlyType);
         return unParsedHourlyJsonObjects.stream()
-                .map(hour -> createHourlyInformationEntity(hour))
+                .map(this::createHourlyInformationEntity)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +57,7 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
     }
 
     @Override
-    protected void storeEntityInChosenLocaion(List<HourlyInformationEntity> entity) {
+    protected void storeEntityInChosenLocation(List<HourlyInformationEntity> entity) {
         addHourlyInformationToRepository(entity);
     }
 

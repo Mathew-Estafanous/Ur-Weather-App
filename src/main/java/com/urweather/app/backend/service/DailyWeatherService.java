@@ -27,7 +27,7 @@ import okhttp3.ResponseBody;
 public class DailyWeatherService extends AbstractService<GeoLocationEntity, List<DayInformationEntity>> {
 
     @Autowired
-    private DayInformationRepository dayInformationRepo;
+    private final DayInformationRepository dayInformationRepo;
 
     public DailyWeatherService(DayInformationRepository dayInformationRepo) {
         this.dayInformationRepo = dayInformationRepo;
@@ -40,7 +40,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationEntity, List
         Type userType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedDayJsonList = gson.fromJson(responseBody.string(), userType);
         return unParsedDayJsonList.stream()
-                .map(day -> createDayInormationEntity(day))
+                .map(this::createDayInormationEntity)
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +58,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationEntity, List
     }
 
     @Override
-    protected void storeEntityInChosenLocaion(List<DayInformationEntity> entity) {
+    protected void storeEntityInChosenLocation(List<DayInformationEntity> entity) {
         addDailyWeatherEntityToRepository(entity);
     }
 
