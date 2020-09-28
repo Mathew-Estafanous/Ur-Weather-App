@@ -80,7 +80,7 @@ public class NavigationView extends Header {
 
     private void runSearchWhenClicked() {
         Optional<String[]> splitLocation = splitStringIntoCityAndCountry(searchField.getValue());
-        if(splitLocation.isEmpty()) return;
+        if(!splitLocation.isPresent()) return;
 
         Optional<GeoLocationEntity> geoLocation = callGeoLocationService(splitLocation.get());
         geoLocation.ifPresent(location -> {
