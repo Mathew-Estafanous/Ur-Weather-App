@@ -40,7 +40,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationEntity, List
         Type userType = new TypeToken<ArrayList<JsonObject>>() {}.getType();
         List<JsonObject> unParsedDayJsonList = gson.fromJson(responseBody.string(), userType);
         return unParsedDayJsonList.stream()
-                .map(this::createDayInormationEntity)
+                .map(this::createDayInformationEntity)
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +75,7 @@ public class DailyWeatherService extends AbstractService<GeoLocationEntity, List
         dayInformationRepo.saveAll(listOfDays);
     }
 
-    private DayInformationEntity createDayInormationEntity(JsonObject dayJsonObject) {
+    private DayInformationEntity createDayInformationEntity(JsonObject dayJsonObject) {
         JsonObject dayInformationJson = new JsonObject();
         Gson gson = new Gson();
         dayInformationJson.add(ServicesConstants.LAT, dayJsonObject.get(ServicesConstants.LAT));

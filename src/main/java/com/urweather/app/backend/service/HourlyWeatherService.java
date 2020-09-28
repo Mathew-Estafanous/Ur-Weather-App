@@ -75,16 +75,16 @@ public class HourlyWeatherService extends AbstractService<GeoLocationEntity, Lis
     }
 
     private HourlyInformationEntity createHourlyInformationEntity(JsonObject hourJsonObject) {
-        JsonObject hourInformatioObject = new JsonObject();
+        JsonObject hourInformationObject = new JsonObject();
         Gson hourGson = new Gson();
-        hourInformatioObject.add(ServicesConstants.LAT, hourJsonObject.get(ServicesConstants.LAT));
-        hourInformatioObject.add(ServicesConstants.LON, hourJsonObject.get(ServicesConstants.LON));
-        hourInformatioObject.add(ServicesConstants.TEMPERATURE, getValueFromElement(hourJsonObject.get(ServicesConstants.TEMPERATURE)));
-        hourInformatioObject.add(ServicesConstants.WEATHER_CODE, getValueFromElement(hourJsonObject.get(ServicesConstants.WEATHER_CODE)));
-        hourInformatioObject.add(ServicesConstants.TIME, getValueFromElement(hourJsonObject.get(ServicesConstants.TIME)));
-        hourInformatioObject.add(ServicesConstants.SUNSET, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNSET)));
-        hourInformatioObject.add(ServicesConstants.SUNRISE, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNRISE)));
+        hourInformationObject.add(ServicesConstants.LAT, hourJsonObject.get(ServicesConstants.LAT));
+        hourInformationObject.add(ServicesConstants.LON, hourJsonObject.get(ServicesConstants.LON));
+        hourInformationObject.add(ServicesConstants.TEMPERATURE, getValueFromElement(hourJsonObject.get(ServicesConstants.TEMPERATURE)));
+        hourInformationObject.add(ServicesConstants.WEATHER_CODE, getValueFromElement(hourJsonObject.get(ServicesConstants.WEATHER_CODE)));
+        hourInformationObject.add(ServicesConstants.TIME, getValueFromElement(hourJsonObject.get(ServicesConstants.TIME)));
+        hourInformationObject.add(ServicesConstants.SUNSET, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNSET)));
+        hourInformationObject.add(ServicesConstants.SUNRISE, getValueFromElement(hourJsonObject.get(ServicesConstants.SUNRISE)));
 
-        return hourGson.fromJson(hourInformatioObject.toString(), HourlyInformationEntity.class);
+        return hourGson.fromJson(hourInformationObject.toString(), HourlyInformationEntity.class);
     }
 }
